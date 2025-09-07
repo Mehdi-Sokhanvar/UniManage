@@ -3,14 +3,16 @@ package org.unimanage.domain.user;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
-import lombok.*;
+import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.unimanage.domain.BaseModel;
 import org.unimanage.enumration.UserStatus;
 
+import java.util.UUID;
 
-
-@Data
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,19 +20,21 @@ import org.unimanage.enumration.UserStatus;
 
 
 @Entity
-@Table
 public class Account extends BaseModel<Long> {
-
-
-
     private String username;
 
     private String password;
 
+
     private String email;
+
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
+    @OneToOne
+    private Person person;
+
+    private UUID authId;
 
 }
