@@ -3,18 +3,15 @@ package org.unimanage.domain.course;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.OneToMany;
 import lombok.*;
 import org.unimanage.domain.BaseModel;
 import org.unimanage.domain.exam.ExamTemplate;
-import org.unimanage.domain.user.Student;
-import org.unimanage.domain.user.Teacher;
+import org.unimanage.domain.user.Enrollment;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,7 +19,7 @@ import java.util.List;
 
 
 @Entity
-@Table
+
 public class OfferedCourse extends BaseModel<Long> {
 
     @ManyToOne
@@ -36,14 +33,12 @@ public class OfferedCourse extends BaseModel<Long> {
 
     private String classLocation;
 
-    @ManyToOne
-    private Teacher teacher;
 
-    @ManyToMany
-    private List<Student> students;
+    @OneToMany(mappedBy = "offeredCourse")
+    private List<Enrollment> enrollmentList;
 
     @ManyToOne
-    private Term terms;
+    private Term term;
 
     private List<ExamTemplate> examTemplates;
 

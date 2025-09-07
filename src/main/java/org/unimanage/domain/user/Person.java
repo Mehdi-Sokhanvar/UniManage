@@ -3,20 +3,20 @@ package org.unimanage.domain.user;
 import jakarta.persistence.*;
 import lombok.*;
 import org.unimanage.domain.BaseModel;
+import org.unimanage.domain.exam.ExamInstance;
 
 import java.util.List;
 
 
-@Data
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@Getter
 
 // fixme : choose best inheritance type for class
 @Entity
-@Table
-@Inheritance(strategy = InheritanceType.JOINED)
+
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Person extends BaseModel<Long> {
 
     private String firstName;
@@ -25,10 +25,19 @@ public class Person extends BaseModel<Long> {
 
     private String nationalCode;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER,mappedBy = "personList")
     private List<Role> roles;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private Account account; // todo:  به این خاطر این قسمت رو از این نوع persis در نظر گرفتیم که این مفهوم رو زمانیک ه داره یه person اضافه میشه همون موقع account هم اضفه بشه
+    @OneToMany(mappedBy = "student")
+    private List<ExamInstance> examInstanceList;
+
+    @Transient
+    private String activeRole;
+
+
+    @OneToMany(mappedBy = "person")
+    private List<Enrollment> offeredCourseList;
+
 
 }
+

@@ -1,9 +1,6 @@
 package org.unimanage.domain.question;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.unimanage.domain.BaseModel;
 import org.unimanage.domain.course.Course;
@@ -12,7 +9,6 @@ import org.unimanage.domain.exam.ExamQuestion;
 import java.util.List;
 
 
-@Data
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,12 +16,12 @@ import java.util.List;
 
 
 @Entity
-@Table
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Question extends BaseModel<Long> {
 
     @ManyToOne
     private Course course;
 
-    @OneToMany
+    @OneToMany(mappedBy = "question")
     private List<ExamQuestion> examQuestions;
 }

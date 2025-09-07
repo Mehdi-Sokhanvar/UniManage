@@ -3,13 +3,12 @@ package org.unimanage.domain.exam;
 import jakarta.persistence.*;
 import lombok.*;
 import org.unimanage.domain.BaseModel;
-import org.unimanage.domain.user.Student;
+import org.unimanage.domain.user.Person;
 import org.unimanage.enumration.ExamStatus;
 
 import java.time.Instant;
 import java.util.List;
 
-@Data
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +16,7 @@ import java.util.List;
 
 
 @Entity
-@Table
+
 public class ExamInstance extends BaseModel<Long> {
 
 
@@ -29,7 +28,7 @@ public class ExamInstance extends BaseModel<Long> {
     private ExamStatus examStatus;
 
     @ManyToOne
-    private Student student;
+    private Person student;
 
     private Double score;
 

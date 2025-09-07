@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @Entity
-@Table
+
 public class ExamQuestion extends BaseModel<Long> {
 
     @ManyToOne
@@ -27,9 +27,7 @@ public class ExamQuestion extends BaseModel<Long> {
 
     private Float score;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST,mappedBy = "assessmentQuestion")
     private List<Answer> answer;
 
-    @OneToMany(mappedBy = "assessmentQuestion")
-    private List<Answer> answers;
 }

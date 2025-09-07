@@ -8,7 +8,6 @@ import org.unimanage.enumration.ExamStatus;
 import java.time.Instant;
 import java.util.List;
 
-@Data
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +15,7 @@ import java.util.List;
 
 
 @Entity
-@Table
+
 public class ExamTemplate extends BaseModel<Long> {
 
     private Instant startTime;
@@ -32,6 +31,6 @@ public class ExamTemplate extends BaseModel<Long> {
     @Enumerated(EnumType.STRING)
     private ExamStatus status;
 
-    @OneToMany
+    @OneToMany(mappedBy = "exam" )
     private List<ExamQuestion> examQuestions;
 }

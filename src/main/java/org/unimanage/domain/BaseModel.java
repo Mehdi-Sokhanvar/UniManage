@@ -12,14 +12,12 @@ import java.time.Instant;
 
 
 
-@Data
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 
 @MappedSuperclass
 public class BaseModel<ID extends Serializable>  implements Serializable {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -6,7 +6,6 @@ import org.unimanage.domain.BaseModel;
 
 import java.util.List;
 
-@Data
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,10 +13,10 @@ import java.util.List;
 
 
 @Entity
-@Table
-public class TestQuestion extends BaseModel<Long> {
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+public class TestQuestion extends Question {
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,mappedBy = "testQuestion")
     private List<Option> options;
 
 }

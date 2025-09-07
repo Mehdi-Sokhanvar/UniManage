@@ -5,18 +5,19 @@ import lombok.*;
 import org.unimanage.domain.BaseModel;
 import org.unimanage.domain.question.Option;
 
-@Data
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+import java.util.List;
 
-
-@Entity
-@Table
-public class TestAnswer extends Answer{
-
-    @ManyToOne
-    private Option option;
-
-}
+//@Getter
+//@AllArgsConstructor
+//@NoArgsConstructor
+//@EqualsAndHashCode(callSuper = true)
+//
+//
+//@Entity
+//
+//public class TestAnswer extends Answer {
+//
+//
+//    @OneToOne(cascade = CascadeType.ALL)
+//    private Option option;
+//}

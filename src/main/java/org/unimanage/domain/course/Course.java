@@ -7,7 +7,6 @@ import org.unimanage.domain.question.Question;
 
 import java.util.List;
 
-@Data
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,7 +14,7 @@ import java.util.List;
 
 
 @Entity
-@Table
+
 public class Course extends BaseModel<Long> {
 
     private String courseName;

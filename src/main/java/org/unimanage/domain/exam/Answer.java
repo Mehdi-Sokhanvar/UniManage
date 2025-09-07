@@ -1,14 +1,10 @@
 package org.unimanage.domain.exam;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.unimanage.domain.BaseModel;
-import org.unimanage.domain.user.Student;
 
 
-@Data
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +12,8 @@ import org.unimanage.domain.user.Student;
 
 
 @Entity
-@Table
+
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Answer extends BaseModel<Long> {
 
     @ManyToOne

@@ -10,7 +10,6 @@ import org.unimanage.domain.BaseModel;
 import java.util.List;
 
 
-@Data
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,7 +17,6 @@ import java.util.List;
 
 
 @Entity
-@Table
 public class Role extends BaseModel<Long> {
 
     private String roleName;

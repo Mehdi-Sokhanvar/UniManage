@@ -7,7 +7,6 @@ import org.unimanage.domain.BaseModel;
 import java.time.Instant;
 import java.util.List;
 
-@Data
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,7 +14,7 @@ import java.util.List;
 
 
 @Entity
-@Table
+
 public class Term extends BaseModel<Long> {
 
     private Short year;
@@ -27,6 +26,6 @@ public class Term extends BaseModel<Long> {
 
 // fixme : use this enumrated
 
-    @OneToMany
+    @OneToMany(mappedBy = "term" )
     private List<OfferedCourse>  offeredCourses;
 }
