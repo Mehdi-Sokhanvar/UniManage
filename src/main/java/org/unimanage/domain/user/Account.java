@@ -1,15 +1,9 @@
 package org.unimanage.domain.user;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.OneToOne;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 import org.unimanage.domain.BaseModel;
-import org.unimanage.enumration.UserStatus;
+import org.unimanage.util.enumration.UserStatus;
 
 import java.util.UUID;
 
@@ -17,24 +11,28 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-
+@Builder
+@Setter
 
 @Entity
 public class Account extends BaseModel<Long> {
+
     private String username;
 
     private String password;
 
-
     private String email;
-
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Person person;
 
     private UUID authId;
 
+    @OneToOne
+    private Role activeRole;
+
 }
+// شماره دانشجویی ,

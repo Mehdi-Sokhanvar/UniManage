@@ -21,6 +21,7 @@ public class Major extends BaseModel<Long> {
 
     private String majorName;
 
+    private Byte semester;
 
     @OneToMany(mappedBy = "major")
     private List<Course> courses;

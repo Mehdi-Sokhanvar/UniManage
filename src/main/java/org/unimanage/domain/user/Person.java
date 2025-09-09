@@ -3,7 +3,9 @@ package org.unimanage.domain.user;
 import jakarta.persistence.*;
 import lombok.*;
 import org.unimanage.domain.BaseModel;
+import org.unimanage.domain.course.OfferedCourse;
 import org.unimanage.domain.exam.ExamInstance;
+import org.unimanage.util.enumration.Degree;
 
 import java.util.List;
 
@@ -12,11 +14,10 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Getter
+@Builder
 
 // fixme : choose best inheritance type for class
 @Entity
-
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Person extends BaseModel<Long> {
 
     private String firstName;
@@ -25,19 +26,19 @@ public class Person extends BaseModel<Long> {
 
     private String nationalCode;
 
-    @ManyToMany(fetch = FetchType.EAGER,mappedBy = "personList")
+    private String studentNumber;
+
+    @ManyToMany(mappedBy = "persons",fetch = FetchType.EAGER)
     private List<Role> roles;
 
     @OneToMany(mappedBy = "student")
     private List<ExamInstance> examInstanceList;
 
-    @Transient
-    private String activeRole;
+    @ManyToMany
+    private List<OfferedCourse> offeredCourseList;
 
 
-    @OneToMany(mappedBy = "person")
-    private List<Enrollment> offeredCourseList;
-
-
+    @Enumerated(EnumType.STRING)
+    private Degree degree;
 }
 

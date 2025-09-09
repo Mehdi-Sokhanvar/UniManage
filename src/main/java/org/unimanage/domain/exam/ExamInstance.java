@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.unimanage.domain.BaseModel;
 import org.unimanage.domain.user.Person;
-import org.unimanage.enumration.ExamStatus;
+import org.unimanage.util.enumration.ExamStatus;
 
 import java.time.Instant;
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.unimanage.enumration;
+package org.unimanage.util.enumration;
 
 public enum UserStatus {
     PENDING,
