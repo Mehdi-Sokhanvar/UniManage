@@ -28,15 +28,14 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Role adminRole = roleRepository.save(Role.builder().roleName("ADMIN").build());
         Role studentRole = roleRepository.save(Role.builder().roleName("STUDENT").build());
-        Role instructorRole = roleRepository.save(Role.builder().roleName("Teacher").build());
+        Role instructorRole = roleRepository.save(Role.builder().roleName("TEACHER").build());
         Role userRole = roleRepository.save(Role.builder().roleName("USER").build());
         accountRepository.save(
-
                 Account.builder()
                         .username("admin")
                         .password(passwordEncoder.encode("1234567890"))
                         .email("admin@gmail.com")
-                        .person(Person.builder().roles(List.of(adminRole)).build())
+                        .person(Person.builder().roles(List.of(adminRole,userRole)).build())
                         .build()
         );
     }

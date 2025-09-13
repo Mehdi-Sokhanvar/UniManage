@@ -5,6 +5,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.*;
 import org.unimanage.domain.BaseModel;
+import org.unimanage.domain.user.Person;
 
 import java.util.List;
 
@@ -25,4 +26,7 @@ public class Major extends BaseModel<Long> {
 
     @OneToMany(mappedBy = "major")
     private List<Course> courses;
+
+    @OneToMany(mappedBy = "major")
+    private List<Person> persons;
 }

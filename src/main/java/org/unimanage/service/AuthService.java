@@ -1,11 +1,8 @@
 package org.unimanage.service;
 
-import org.unimanage.domain.user.Account;
-import org.unimanage.util.dto.AccountDto;
-import org.unimanage.util.dto.AccountResponse;
+import org.unimanage.domain.user.Person;
 
-public interface AuthService {
-
-    AccountResponse registerStudent(AccountDto accountDto);
-    AccountResponse registerTeacher(AccountDto accountDto);
+public interface AuthService extends BaseService<Person,Long> {
+    Person registerStudent(Person teacher);
+    Person addTeacher(Person teacher);
 }

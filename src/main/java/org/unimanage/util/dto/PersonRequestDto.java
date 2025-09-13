@@ -5,9 +5,9 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class AccountDto {
-    private String username;
+public class PersonRequestDto {
+    private String firstName;
+    private String lastName;
     private String nationalCode;
-    private String Major;
-
+    private String phoneNumber;
 }

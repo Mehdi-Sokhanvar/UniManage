@@ -1,76 +1,93 @@
 package org.unimanage.service.implementation;
 
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.unimanage.domain.course.Major;
 import org.unimanage.domain.user.Account;
 import org.unimanage.domain.user.Person;
 import org.unimanage.domain.user.Role;
 import org.unimanage.repository.AccountRepository;
-import org.unimanage.repository.GenericRepository;
+import org.unimanage.repository.MajorRepository;
 import org.unimanage.repository.PersonRepository;
 import org.unimanage.repository.RoleRepository;
 import org.unimanage.service.AuthService;
-import org.unimanage.util.dto.AccountDto;
-import org.unimanage.util.dto.AccountResponse;
-import org.unimanage.util.dto.config.AccountMapper;
-import org.unimanage.util.dto.config.AccountResponseMapper;
-import org.unimanage.util.dto.config.GenericMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class AuthServiceImpl  implements AuthService {
+public class AuthServiceImpl extends BaseServiceImpl<Person, Long> implements AuthService {
 
-    private final AccountRepository accountRepository;
     private final PersonRepository personRepository;
-    private final AccountMapper accountMapper;
     private final RoleRepository roleRepository;
-    private final AccountResponseMapper accountResponseMapper;
+    private final MajorRepository majorRepository;
+    private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
 
-
-    public AuthServiceImpl(AccountRepository accountRepository,
-                           PersonRepository personRepository, AccountMapper accountMapper,
-                           RoleRepository roleRepository, AccountResponseMapper accountResponseMapper) {
-        this.accountRepository = accountRepository;
+    public AuthServiceImpl(PersonRepository personRepository, RoleRepository roleRepository, MajorRepository majorRepository, AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
+        super(personRepository);
         this.personRepository = personRepository;
-        this.accountMapper = accountMapper;
         this.roleRepository = roleRepository;
-        this.accountResponseMapper = accountResponseMapper;
+        this.majorRepository = majorRepository;
+        this.accountRepository = accountRepository;
+        this.passwordEncoder = passwordEncoder;
     }
+
 
     @Override
-    public AccountResponse registerStudent(AccountDto accountDto) {
-        return register(accountDto, "STUDENT");
-    }
-
-    @Override
-    public AccountResponse registerTeacher(AccountDto accountDto) {
-        return register(accountDto, "Teacher");
-    }
-
-    private AccountResponse register(AccountDto accountDto, String roleName) {
-
-        checkUserNameExists(accountDto.getUsername());
-        Role role = checkRoleExists(roleName);
-        Role role2 = checkRoleExists("USER");
-
-        Account entity = accountMapper.toEntity(accountDto);
-        entity.setPerson(Person.builder().roles(List.of(role, role2)).build());
-
-        Account savedUser = accountRepository.save(entity);
-        return accountResponseMapper.toDTO(savedUser);
-
-    }
-
-    private void checkUserNameExists(String username) {
-
-        if (accountRepository.existsAccountByUsername(username)) {
-            throw new RuntimeException("USERNAME ALREADY EXISTS");
+    protected void prePersist(Person entity) {
+        Optional<Person> byNationalCode = personRepository
+                .findByNationalCode(entity.getNationalCode());
+        if (byNationalCode.isPresent()) {
+            throw new EntityExistsException("Person with NationalCode " + entity.getNationalCode() + " already exists");
         }
+        List<Role> persistedRoles = entity.getRoles().stream()
+                .map(role -> roleRepository.findByRoleName(role.getRoleName())
+                        .orElseThrow(() -> new EntityNotFoundException("Role " + role.getRoleName() + " not found")))
+                .toList();
+        entity.setRoles(persistedRoles);
+    }
+
+    public Person registerStudent(Person student) {
+        student.setRoles(List.of(roleRepository.findByRoleName("STUDENT")
+                .orElseThrow(() -> new EntityNotFoundException("Role STUDENT not found"))));
+        return this.persist(student);
+    }
+
+
+    public Person addTeacher(Person teacher) {
+        teacher.setRoles(List.of(roleRepository.findByRoleName("TEACHER")
+                .orElseThrow(() -> new EntityNotFoundException("Role TEACHER not found"))));
+        return this.persist(teacher);
+    }
+
+    @Override
+    protected void preUpdate(Person entity) {
+    }
+
+    @Override
+    protected void preDelete(Long aLong) {
 
     }
 
-    private Role checkRoleExists(String role) {
-        return roleRepository.findByRoleName(role).orElseThrow(() -> new RuntimeException("ROLE NOT EXISTS"));
+    @Override
+    protected void postUpdate(Person entity) {
+    }
+
+    @Override
+    protected void postPersist(Person entity) {
+        accountRepository.save(Account.builder()
+                .person(entity)
+                .username(entity.getNationalCode())
+                .password(passwordEncoder.encode(entity.getPhoneNumber()))
+                .build());
+    }
+
+    @Override
+    protected void postDelete(Person entity) {
+
     }
 }

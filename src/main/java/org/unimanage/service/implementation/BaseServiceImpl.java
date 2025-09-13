@@ -1,57 +1,66 @@
 package org.unimanage.service.implementation;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.unimanage.repository.GenericRepository;
+import org.unimanage.domain.BaseModel;
 import org.unimanage.service.BaseService;
-import org.unimanage.util.dto.config.GenericMapper;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-//todo : is it true or false
-public abstract class BaseServiceImpl<E, DTO, ID> implements BaseService<DTO, ID> {
+public abstract class BaseServiceImpl<T extends BaseModel, ID> implements BaseService<T, ID> {
 
-    private final JpaRepository<E, ID> repository;
-    private final GenericMapper<E, DTO> mapper;
+    private final JpaRepository<T, ID> repository;
 
-    public BaseServiceImpl(JpaRepository<E, ID> repository, GenericMapper<E, DTO> mapper) {
+    public BaseServiceImpl(JpaRepository<T, ID> repository) {
         this.repository = repository;
-        this.mapper = mapper;
+    }
+
+
+    @Override
+    public T persist(T entity) {
+
+        prePersist(entity);
+        T save = repository.save(entity);
+
+        postPersist(save);
+        return save;
     }
 
     @Override
-    public DTO create(DTO dto) {
-        E entity = mapper.toEntity(dto);
-        entity = repository.save(entity);
-        return mapper.toDTO(entity);
+    public Optional<T> findById(ID id) {
+        return repository.findById(id);
     }
 
     @Override
-    public DTO getById(ID id) {
-        return repository
-                .findById(id).map(mapper::toDTO)
-                .orElseThrow(() -> new EntityNotFoundException("Not found"));
+    public List<T> findAll() {
+        return repository.findAll();
     }
 
     @Override
-    public DTO update(ID id, DTO dto) {
-        E entity = mapper.toEntity(dto);
-        entity = repository.save(entity);
-        return mapper.toDTO(entity);
+    public void deleteById(ID id) {
+        preDelete(id);
+        repository.findById(id).ifPresent(repository::delete);
     }
 
     @Override
-    public void delete(ID id) {
-        repository.deleteById(id);
+    public boolean existsById(ID id) {
+        return repository.existsById(id);
     }
 
     @Override
-    public List<DTO> getAll() {
-        return repository
-                .findAll()
-                .stream()
-                .map(mapper::toDTO)
-                .collect(Collectors.toList());
+    public Long count() {
+        return repository.count();
     }
+
+    protected abstract void prePersist(T entity);
+
+    protected abstract void preUpdate(T entity);
+
+    protected abstract void preDelete(ID id);
+
+    protected abstract void postUpdate(T entity);
+    protected abstract void postPersist(T entity);
+
+    protected abstract void postDelete(T entity);
+
 }

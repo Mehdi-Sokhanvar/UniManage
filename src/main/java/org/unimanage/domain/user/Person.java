@@ -3,6 +3,7 @@ package org.unimanage.domain.user;
 import jakarta.persistence.*;
 import lombok.*;
 import org.unimanage.domain.BaseModel;
+import org.unimanage.domain.course.Major;
 import org.unimanage.domain.course.OfferedCourse;
 import org.unimanage.domain.exam.ExamInstance;
 import org.unimanage.util.enumration.Degree;
@@ -14,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Getter
+@Setter
 @Builder
 
 // fixme : choose best inheritance type for class
@@ -26,9 +28,16 @@ public class Person extends BaseModel<Long> {
 
     private String nationalCode;
 
-    private String studentNumber;
+    private String personalCode;
 
-    @ManyToMany(mappedBy = "persons",fetch = FetchType.EAGER)
+    private String phoneNumber;
+
+    @ManyToMany
+    @JoinTable(
+            name = "person_role",
+            joinColumns = @JoinColumn(name = "person_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     private List<Role> roles;
 
     @OneToMany(mappedBy = "student")
@@ -37,8 +46,10 @@ public class Person extends BaseModel<Long> {
     @ManyToMany
     private List<OfferedCourse> offeredCourseList;
 
+    @ManyToOne
+    private Major major;
 
-    @Enumerated(EnumType.STRING)
-    private Degree degree;
+    @OneToOne
+    private Account account;
 }
 

@@ -1,10 +1,7 @@
 package org.unimanage.domain.user;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.unimanage.domain.BaseModel;
 
@@ -22,6 +19,7 @@ public class Role extends BaseModel<Long> {
 
     private String roleName;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "roles")
+
     private List<Person> persons;
 }
