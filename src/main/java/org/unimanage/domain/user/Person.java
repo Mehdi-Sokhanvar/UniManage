@@ -2,6 +2,7 @@ package org.unimanage.domain.user;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.unimanage.domain.BaseModel;
 import org.unimanage.domain.course.Major;
 import org.unimanage.domain.course.OfferedCourse;
@@ -9,17 +10,17 @@ import org.unimanage.domain.exam.ExamInstance;
 import org.unimanage.util.enumration.Degree;
 
 import java.util.List;
+import java.util.Set;
 
-
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
-@Builder
+@SuperBuilder
+@NoArgsConstructor
 
-// fixme : choose best inheritance type for class
+
+
 @Entity
+@Table(name = "person")
 public class Person extends BaseModel<Long> {
 
     private String firstName;
@@ -28,28 +29,30 @@ public class Person extends BaseModel<Long> {
 
     private String nationalCode;
 
-    private String personalCode;
+    private String email;
 
     private String phoneNumber;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "person_role",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private List<Role> roles;
+    private Set<Role> roles;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
     private List<ExamInstance> examInstanceList;
 
-    @ManyToMany
+
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<OfferedCourse> offeredCourseList;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Major major;
 
-    @OneToOne
+    @OneToOne(mappedBy = "person", fetch = FetchType.EAGER)
     private Account account;
+
 }
 

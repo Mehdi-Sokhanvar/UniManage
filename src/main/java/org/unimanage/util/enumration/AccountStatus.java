@@ -1,6 +1,6 @@
 package org.unimanage.util.enumration;
 
-public enum UserStatus {
+public enum AccountStatus {
     PENDING,
     ACTIVE,
     INACTIVE

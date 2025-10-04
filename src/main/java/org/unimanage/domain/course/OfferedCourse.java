@@ -2,6 +2,7 @@ package org.unimanage.domain.course;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.unimanage.domain.BaseModel;
 import org.unimanage.domain.exam.ExamTemplate;
 import org.unimanage.domain.user.Person;
@@ -10,12 +11,13 @@ import java.time.Instant;
 import java.util.List;
 
 @Getter
-@AllArgsConstructor
+@Setter
+@SuperBuilder
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 
 
 @Entity
+@Table(name = "offered_course")
 
 public class OfferedCourse extends BaseModel<Long> {
 
@@ -30,18 +32,18 @@ public class OfferedCourse extends BaseModel<Long> {
 
     private String classLocation;
 
-    private Byte semester;
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     private Person teacher;
 
-    @ManyToMany(mappedBy = "offeredCourseList")
+    @ManyToMany(mappedBy = "offeredCourseList", fetch = FetchType.EAGER)
     private List<Person> studentList;
 
     @ManyToOne
     private Term term;
 
+    @OneToMany(mappedBy = "offeredCourse")
     private List<ExamTemplate> examTemplates;
 
 }

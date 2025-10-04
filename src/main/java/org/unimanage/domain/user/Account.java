@@ -2,37 +2,34 @@ package org.unimanage.domain.user;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.unimanage.domain.BaseModel;
-import org.unimanage.util.enumration.UserStatus;
-
+import org.unimanage.util.enumration.AccountStatus;
 import java.util.UUID;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-@Builder
 @Setter
+@SuperBuilder
+@NoArgsConstructor
+
 
 @Entity
+@Table(name = "account")
 public class Account extends BaseModel<Long> {
 
     private String username;
 
     private String password;
 
-    private String email;
-
     @Enumerated(EnumType.STRING)
-    private UserStatus status;
+    private AccountStatus status;
 
     @OneToOne(cascade = CascadeType.PERSIST)
     private Person person;
 
     private UUID authId;
 
-    @OneToOne
-    private Role activeRole;
+//    @ManyToOne
+//    private Role activeRole;
 
 }
-// شماره دانشجویی ,

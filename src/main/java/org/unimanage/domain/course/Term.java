@@ -2,30 +2,36 @@ package org.unimanage.domain.course;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.unimanage.domain.BaseModel;
+import org.unimanage.util.enumration.TermStatus;
 
 import java.time.Instant;
 import java.util.List;
 
 @Getter
-@AllArgsConstructor
+@Setter
+@SuperBuilder
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+
 
 
 @Entity
+@Table(name = "term")
 
 public class Term extends BaseModel<Long> {
 
-    private Short year;
-    private Short month;
-    private String semester;
     private Byte termType;
+    private int year;
     private Instant startTime;
     private Instant endTime;
 
-// fixme : use this enumrated
+    @Enumerated(EnumType.STRING)
+    private TermStatus termStatus;
 
-    @OneToMany(mappedBy = "term" )
+    @ManyToOne
+    private Major major;
+
+    @OneToMany(mappedBy = "term" ,cascade = CascadeType.REMOVE)
     private List<OfferedCourse>  offeredCourses;
 }
