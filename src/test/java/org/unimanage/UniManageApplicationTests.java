@@ -8,6 +8,7 @@ class UniManageApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }

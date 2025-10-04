@@ -1,0 +1,31 @@
+
+###
+GET https://localhost:8443/api/majors/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJhdXRoLWlkIjoiYjc1ZmRhYWItMjJhNi00MmE0LWJlNDEtMGExMmUyN2EwZDdjIiwiaWF0IjoxNzU5MDUwODYwLCJleHAiOjE4NDU0NTA4NjB9.KlZfQBZHZyqVjkXkBMr86suTOg78NYtlhjkRDdz1fcohJj7zUhxAGR-8IRPGwllpZc4Du9eKeU4qx7LAPGD3_ZHnLNKOCm8gdXSElpP59Z5WyRQ-OlOVqIkmXaIS9VuyIO8bO7Xzn23JOjbLsf1t1hLCizH8J4pNZc3W_zqErdfmNNwXroSFtQ0-jhNOor-y8fqOAQN5iwl04RJqB9try421dNN5HFHAtmIwjQy4OQSZoTi2zv5FZFDuCgXdMdT_Dk_Oa3IFqaPp3A-QKSrsJ7pvedl_B_Wd1EBSt4ZTv08dlQQHX4yB2ildGbD7dm9-nZ3xJL5KfXXubnLvEAo4pQ
+
+
+
+###
+POST https://localhost:8443/api/terms/
+Content-Type: application/json
+Authorization: Bearer {{admin_token}}
+
+{
+  "year": 1334,
+  "majorId": 1,
+  "startTime": "2025-09-29T15:30:00.123Z",
+  "endTime": "2025-09-30T15:30:12.123Z"
+}
+###
+PUT https://localhost:8443/api/terms/
+Content-Type: application/json
+Authorization: Bearer {{admin_token}}
+
+{
+  "id": 1,
+  "year": 1334,
+  "majorId": 1,
+  "startTime": "2025-09-29T15:30:00.123Z",
+  "endTime": "2025-09-30T15:30:12.123Z"
+}
