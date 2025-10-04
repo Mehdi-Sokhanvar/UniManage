@@ -10,5 +10,4 @@ import lombok.Setter;
 public class AccountResponse {
     private String username;
     private String major;
-
 }
