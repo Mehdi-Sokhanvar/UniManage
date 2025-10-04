@@ -2,18 +2,18 @@ package org.unimanage.domain.exam;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.unimanage.domain.BaseModel;
 
 
 @Getter
-@AllArgsConstructor
+@Setter
+@SuperBuilder
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 
 
 @Entity
-
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Table(name = "answer")
 public class Answer extends BaseModel<Long> {
 
     @ManyToOne

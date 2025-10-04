@@ -1,8 +1,21 @@
 package org.unimanage.service;
 
 import org.unimanage.domain.user.Person;
+import org.unimanage.domain.user.Role;
+import org.unimanage.util.dto.AccountRequestDto;
+import org.unimanage.util.dto.AuthResponseDto;
 
-public interface AuthService extends BaseService<Person,Long> {
-    Person registerStudent(Person teacher);
-    Person addTeacher(Person teacher);
+import java.security.Principal;
+import java.util.Set;
+
+public interface AuthService  extends BaseService<Person,Long>{
+    AuthResponseDto login(AccountRequestDto request);
+    void addRoleToPerson(String role , Long personId);
+    Set<Role> getPersonRoles(Principal principal);
+    void rePassword(String oldPassword, String newPassword, Principal principal);
+    void forgotPassword(String emailOrPhone);
+    AuthResponseDto refreshToken(String refreshToken);
+    void registerPerson(Person person,String role);
+    void activeAccount(Long accountId);
+    void logout(Principal principal);
 }

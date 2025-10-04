@@ -1,32 +1,41 @@
 package org.unimanage.domain.course;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.unimanage.domain.BaseModel;
 import org.unimanage.domain.user.Person;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Getter
-@AllArgsConstructor
+@Setter
+@SuperBuilder
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 
 
 @Entity
+@Table(name = "major")
 
 public class Major extends BaseModel<Long> {
 
-    private String majorName;
+    private String name;
 
-    private Byte semester;
+    private UUID Code;
+
+    private Byte numberOfUnits;
+
+    private Boolean active;
+
+    @OneToMany(mappedBy = "major")
+    private List<Term> terms;
 
     @OneToMany(mappedBy = "major")
     private List<Course> courses;
 
-    @OneToMany(mappedBy = "major")
+
+    @OneToMany(mappedBy = "major",fetch = FetchType.LAZY)
     private List<Person> persons;
 }

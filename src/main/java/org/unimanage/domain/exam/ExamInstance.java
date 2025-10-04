@@ -2,6 +2,7 @@ package org.unimanage.domain.exam;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.unimanage.domain.BaseModel;
 import org.unimanage.domain.user.Person;
 import org.unimanage.util.enumration.ExamStatus;
@@ -10,15 +11,15 @@ import java.time.Instant;
 import java.util.List;
 
 @Getter
-@AllArgsConstructor
+@Setter
+@SuperBuilder
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 
 
 @Entity
+@Table(name = "exam_instance")
 
 public class ExamInstance extends BaseModel<Long> {
-
 
     private Instant startTime;
 
