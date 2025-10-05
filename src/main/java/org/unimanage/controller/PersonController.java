@@ -38,7 +38,7 @@ public class PersonController {
                         .message(messageSource.getMessage("success.change.password", new Object[]{principal.getName()}, locale))
                         .build());
 
-    }
+    } //fixme : refactor the response api for this
 
 
     @GetMapping("/roles")
@@ -53,13 +53,14 @@ public class PersonController {
                                         .toList())
                                 .build()
                 );
-    }
+    } //fixme : refactor the response api for this
 
 
-    @GetMapping("/logout")
-    public  ResponseEntity<Void> logout(Principal principal, Locale locale) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT);
-    }
+//    @GetMapping("/logout")
+//    public  ResponseEntity<Void> logout(Principal principal, Locale locale) {
+////        return ResponseEntity.status(HttpStatus.NO_CONTENT);
+//        return
+//    } //fixme : write this code
 
 
 

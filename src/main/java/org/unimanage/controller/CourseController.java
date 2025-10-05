@@ -67,7 +67,6 @@ public class CourseController {
         return ResponseEntity.ok(courseMapper.toDTO(persist));
     }
 
-
     @DeleteMapping("/{majorId}")
     @PreAuthorize(ADMIN_OR_MANAGER)
     public ResponseEntity<CourseDto> deleteCourse(@PathVariable Long majorId) {

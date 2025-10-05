@@ -73,9 +73,13 @@ public class AdminController {
                 messageSource.getMessage("success.add.role", new Object[]{request.getRoleName()}, locale)
         );
     }
-
-
-    ///fix me : use correct response for some api
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PostMapping("/users/{personId}/roles")
+//    public String addRoleToPerson(@PathVariable Long personId, @RequestBody AddRoleRequest request, Locale locale) {
+//        authService.addRoleToPerson(request.getRoleName(), personId);
+//        return messageSource.getMessage("success.add.role", new Object[]{request.getRoleName()}, locale);
+//
+//    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/active/account/{accountId}")

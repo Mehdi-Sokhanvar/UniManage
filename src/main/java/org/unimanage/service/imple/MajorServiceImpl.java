@@ -9,11 +9,8 @@ import org.unimanage.domain.course.Major;
 import org.unimanage.repository.CourseRepository;
 import org.unimanage.repository.MajorRepository;
 import org.unimanage.service.MajorService;
-import org.unimanage.util.message.ErrorMessage;
 import org.unimanage.util.exception.AccessDeniedException;
 import org.unimanage.util.exception.DuplicateEntityException;
-import org.unimanage.util.exception.EntityNotFoundException;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -45,7 +42,7 @@ public class MajorServiceImpl extends BaseServiceImpl<Major, Long> implements Ma
     @Override
     public void deleteById(Long id) {
         Major major = majorRepository.findById(id)
-                .orElseThrow(() -> new org.unimanage.util.exception.EntityNotFoundException(messageSource.getMessage("error.major.not.found.by.id",new Object[]{id}, LocaleContextHolder.getLocale()));
+                .orElseThrow(() -> new org.unimanage.util.exception.EntityNotFoundException(messageSource.getMessage("error.major.not.found.by.id",new Object[]{id}, LocaleContextHolder.getLocale())));
        if (!major.getActive()){
            String errorMessage = messageSource.getMessage(
                    "error.major.already.inactive",
@@ -80,8 +77,6 @@ public class MajorServiceImpl extends BaseServiceImpl<Major, Long> implements Ma
     public List<Major> findAll() {
         return majorRepository.findMajorByActiveIsTrue();
     }
-
-
 
 }
 
