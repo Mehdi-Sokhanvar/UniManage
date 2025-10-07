@@ -17,5 +17,5 @@ public interface AuthService  extends BaseService<Person,Long>{
     AuthResponseDto refreshToken(String refreshToken);
     void registerPerson(Person person,String role);
     void activeAccount(Long accountId);
-    void logout(Principal principal);
+    void logOut(String token);
 }

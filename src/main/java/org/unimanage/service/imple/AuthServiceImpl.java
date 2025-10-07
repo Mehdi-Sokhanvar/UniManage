@@ -55,7 +55,7 @@ public class AuthServiceImpl extends BaseServiceImpl<Person, Long> implements Au
                            MajorRepository majorRepository, AccountRepository accountRepository,
                            PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
                            JwtUtil jwtUtil, CustomUserDetailsService customUserDetailsService, MessageSource messageSource) {
-        super(personRepository);
+        super(personRepository,messageSource);
         this.personRepository = personRepository;
         this.roleRepository = roleRepository;
         this.majorRepository = majorRepository;
@@ -66,8 +66,6 @@ public class AuthServiceImpl extends BaseServiceImpl<Person, Long> implements Au
         this.customUserDetailsService = customUserDetailsService;
         this.messageSource = messageSource;
     }
-
-
 
 
     @Override
@@ -88,8 +86,16 @@ public class AuthServiceImpl extends BaseServiceImpl<Person, Long> implements Au
     }
 
     @Override
-    public void logout(Principal principal) {
+    public void logOut(String token) {
+        Jws<Claims> claimsJws = jwtUtil.validateToken(token);
 
+        String authToken = claimsJws.getBody().get("auth-id").toString();
+
+        Account account = accountRepository.findByAuthId(UUID.fromString(authToken))
+                .orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("account.not.found", new Object[]{authToken}, LocaleContextHolder.getLocale())));
+
+        account.setAuthId(null);
+        accountRepository.save(account);
     }
 
 
@@ -143,9 +149,9 @@ public class AuthServiceImpl extends BaseServiceImpl<Person, Long> implements Au
     public void addRoleToPerson(String role, Long personId) {
         Locale locale = LocaleContextHolder.getLocale();
         Person person = personRepository.findById(personId)
-                .orElseThrow(() -> new org.unimanage.util.exception.EntityNotFoundException(messageSource.getMessage("error.person.not.found", new Object[]{personId},locale)));
+                .orElseThrow(() -> new org.unimanage.util.exception.EntityNotFoundException(messageSource.getMessage("error.person.not.found", new Object[]{personId}, locale)));
 
-        boolean hasRole= person.getRoles().stream()
+        boolean hasRole = person.getRoles().stream()
                 .anyMatch(r -> r.getName().equals(role));
 
         if (hasRole) {

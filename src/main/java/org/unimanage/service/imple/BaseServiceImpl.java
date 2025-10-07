@@ -2,6 +2,8 @@ package org.unimanage.service.imple;
 
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.unimanage.domain.BaseModel;
 import org.unimanage.service.BaseService;
@@ -10,6 +12,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 public abstract class BaseServiceImpl<T extends BaseModel<ID>, ID extends Serializable>
         implements BaseService<T, ID> {
 
@@ -17,10 +21,12 @@ public abstract class BaseServiceImpl<T extends BaseModel<ID>, ID extends Serial
 
     private final JpaRepository<T, ID> repository;
 
+    private final MessageSource messageSource;
 
 
-    protected BaseServiceImpl(JpaRepository<T, ID> repository) {
+    protected BaseServiceImpl(JpaRepository<T, ID> repository, MessageSource messageSource) {
         this.repository = repository;
+        this.messageSource = messageSource;
     }
 
 
@@ -31,6 +37,8 @@ public abstract class BaseServiceImpl<T extends BaseModel<ID>, ID extends Serial
         if (isNew) {
             prePersist(entity);
         } else {
+            T entityNotFound = repository.findById(entity.getId()).orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("ENTITY_NOT_FOUND", new Object[]{entity.getId()}, LocaleContextHolder.getLocale())));
+//            entity.setId(entityNotFound.getId());
             preUpdate(entity);
         }
 
@@ -41,7 +49,6 @@ public abstract class BaseServiceImpl<T extends BaseModel<ID>, ID extends Serial
         } else {
             postUpdate(saved);
         }
-
         return saved;
     }
 
@@ -58,10 +65,10 @@ public abstract class BaseServiceImpl<T extends BaseModel<ID>, ID extends Serial
     @Override
     public void deleteById(ID id) {
 //   todo : توی برنامه ما وقتی داریم از جنریک برای ورود یه نوع مشخث میگیریم طوری بهتر این رو هندل کنیم
-//        T entity = repository.findById(id)
-//                .orElseThrow(() -> new EntityNotFoundException(
-//                        String.format(ENTITY_NOT_FOUND, id)
-//                ));
+        T entity = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format(ENTITY_NOT_FOUND, id)
+                ));
         preDelete(id);
         repository.deleteById(id);
 //        postDelete(entity);

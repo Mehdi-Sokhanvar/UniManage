@@ -2,6 +2,7 @@ package org.unimanage.service.imple;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.unimanage.domain.course.Major;
 import org.unimanage.domain.course.Term;
@@ -20,12 +21,14 @@ public class TermServiceImpl extends BaseServiceImpl<Term, Long> implements Term
 
     private final TermRepository termRepository;
     private final MajorRepository majorRepository;
+    private final MessageSource messageSource;
 
 
-    public TermServiceImpl(TermRepository termRepository, MajorRepository majorRepository) {
-        super(termRepository);
+    public TermServiceImpl(TermRepository termRepository, MajorRepository majorRepository, MessageSource messageSource) {
+        super(termRepository,messageSource);
         this.termRepository = termRepository;
         this.majorRepository = majorRepository;
+        this.messageSource = messageSource;
     }
 
 
