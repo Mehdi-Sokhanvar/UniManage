@@ -1,6 +1,8 @@
 package org.unimanage.util.dto.mapper;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 import org.unimanage.domain.course.Major;
 import org.unimanage.util.dto.MajorDto;
 
@@ -12,4 +14,7 @@ public abstract class MajorMapper implements GenericMapper<Major, MajorDto> {
 
     @Override
     public abstract Major toEntity(MajorDto majorDto);
+
+
+
 }

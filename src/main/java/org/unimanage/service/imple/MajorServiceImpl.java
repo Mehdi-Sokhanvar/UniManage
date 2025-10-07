@@ -24,7 +24,7 @@ public class MajorServiceImpl extends BaseServiceImpl<Major, Long> implements Ma
     private final MessageSource messageSource;
 
     public MajorServiceImpl(MajorRepository majorRepository, CourseRepository courseRepository, MessageSource messageSource) {
-        super(majorRepository);
+        super(majorRepository,messageSource);
         this.majorRepository = majorRepository;
         this.courseRepository = courseRepository;
         this.messageSource = messageSource;
@@ -40,9 +40,14 @@ public class MajorServiceImpl extends BaseServiceImpl<Major, Long> implements Ma
     }
 
     @Override
+    protected void preUpdate(Major entity) {
+        super.preUpdate(entity);
+    }
+
+    @Override
     public void deleteById(Long id) {
         Major major = majorRepository.findById(id)
-                .orElseThrow(() -> new org.unimanage.util.exception.EntityNotFoundException(messageSource.getMessage("error.major.not.found.by.id",new Object[]{id}, LocaleContextHolder.getLocale())));
+                .orElseThrow(() -> new org.unimanage.util.exception.EntityNotFoundException(messageSource.getMessage("ENTITY_NOT_FOUND",new Object[]{id}, LocaleContextHolder.getLocale())));
        if (!major.getActive()){
            String errorMessage = messageSource.getMessage(
                    "error.major.already.inactive",
@@ -53,19 +58,15 @@ public class MajorServiceImpl extends BaseServiceImpl<Major, Long> implements Ma
        }
         major.setActive(false);
         majorRepository.save(major);
+
+
     }
 
     @Override
     public Major findById(Long majorId) {
-        Major major = majorRepository.findById(majorId)
+        return majorRepository.findById(majorId)
                 .orElseThrow(() ->
-                        new org.unimanage.util.exception.EntityNotFoundException(messageSource.getMessage("",new Object[]{""}, LocaleContextHolder.getLocale())));
-
-        if (major.getActive()){
-            return major;
-        }
-
-        throw new AccessDeniedException(messageSource.getMessage("",new Object[]{},LocaleContextHolder.getLocale()));
+                        new org.unimanage.util.exception.EntityNotFoundException(messageSource.getMessage("ENTITY_NOT_FOUND",new Object[]{majorId}, LocaleContextHolder.getLocale())));
     }
 
     @Override

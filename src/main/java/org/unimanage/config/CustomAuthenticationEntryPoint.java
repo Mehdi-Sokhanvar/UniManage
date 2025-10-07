@@ -16,10 +16,11 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write("""
-            {
-              "status": 401,
-              "error": "Unauthorized"
-            }
-        """);
+                    {
+                      "status": 401,
+                      "error": "Unauthorized"
+                    }
+                """);
     }
+    // fixme : handle this exception org.springframework.security.authorization.AuthorizationDeniedException: Access Denied
 }
