@@ -25,14 +25,14 @@ public class Major extends BaseModel<Long> {
 
     private UUID Code;
 
-    private Byte numberOfUnits;
+    private Integer numberOfUnits;
 
     private Boolean active;
 
-    @OneToMany(mappedBy = "major")
+    @OneToMany(mappedBy = "major", fetch = FetchType.LAZY)
     private List<Term> terms;
 
-    @OneToMany(mappedBy = "major")
+    @OneToMany(mappedBy = "major", fetch = FetchType.LAZY)
     private List<Course> courses;
 
 

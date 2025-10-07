@@ -20,10 +20,4 @@ public class BaseModel<ID extends Serializable> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private ID id;
-
-
-
-   
-
-
 }

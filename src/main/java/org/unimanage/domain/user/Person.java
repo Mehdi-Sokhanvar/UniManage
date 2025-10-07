@@ -45,7 +45,7 @@ public class Person extends BaseModel<Long> {
     private List<ExamInstance> examInstanceList;
 
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "studentList")
     private List<OfferedCourse> offeredCourseList;
 
     @ManyToOne(fetch = FetchType.LAZY)

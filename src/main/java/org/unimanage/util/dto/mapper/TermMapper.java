@@ -22,11 +22,11 @@ public abstract class TermMapper implements GenericMapper<Term, TermDto> {
 
     @AfterMapping
     public void AfterToEntity(TermDto termDto, @MappingTarget Term entity) {
-        Major major = new Major();
-        major.setId(termDto.getMajorId());
-        entity.setStartTime(Instant.parse(termDto.getStartTime()));
-        entity.setEndTime(Instant.parse(termDto.getEndTime()));
-        entity.setMajor(major);
+//        Major major = new Major();
+//        major.setId(termDto.getMajorId());
+//        entity.setStartTime(Instant.parse(termDto.getStartTime()));
+//        entity.setEndTime(Instant.parse(termDto.getEndTime()));
+//        entity.setMajor(major);
     }
 
     @AfterMapping

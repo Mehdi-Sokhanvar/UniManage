@@ -70,15 +70,15 @@ public class DataInitializer implements CommandLineRunner {
 
         majorRepository.save(Major.builder()
                 .name("علوم کامپیوتر")
-                .numberOfUnits((byte) 70)
+                .numberOfUnits(70)
                 .build());
         majorRepository.save(Major.builder()
                 .name("الکترونیک ")
-                .numberOfUnits((byte) 70)
+                .numberOfUnits( 70)
                 .build());
         majorRepository.save(Major.builder()
                 .name("برق ")
-                .numberOfUnits((byte) 70)
+                .numberOfUnits(70)
                 .build());
 
 

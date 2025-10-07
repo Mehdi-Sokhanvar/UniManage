@@ -7,6 +7,7 @@ import org.unimanage.domain.BaseModel;
 import org.unimanage.util.enumration.TermStatus;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -21,10 +22,11 @@ import java.util.List;
 
 public class Term extends BaseModel<Long> {
 
-    private Byte termType;
+    @Enumerated(EnumType.STRING)
+    private TermType termType;
     private int year;
-    private Instant startTime;
-    private Instant endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
     @Enumerated(EnumType.STRING)
     private TermStatus termStatus;
@@ -32,6 +34,6 @@ public class Term extends BaseModel<Long> {
     @ManyToOne
     private Major major;
 
-    @OneToMany(mappedBy = "term" ,cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "term" ,cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
     private List<OfferedCourse>  offeredCourses;
 }

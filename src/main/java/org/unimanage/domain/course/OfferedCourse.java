@@ -7,7 +7,9 @@ import org.unimanage.domain.BaseModel;
 import org.unimanage.domain.exam.ExamTemplate;
 import org.unimanage.domain.user.Person;
 
+import java.time.DayOfWeek;
 import java.time.Instant;
+import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -24,11 +26,13 @@ public class OfferedCourse extends BaseModel<Long> {
     @ManyToOne
     private Course course;
 
-    private Instant classDate;//fixme : time
+    private DayOfWeek dayOfWeek;
 
-    private Instant finishedDate;//fixme : time
+    private LocalTime startTime;
 
-    private Byte capacity;  // todo : 50- 1
+    private LocalTime endTime;
+
+    private Integer capacity;
 
     private String classLocation;
 
@@ -37,13 +41,18 @@ public class OfferedCourse extends BaseModel<Long> {
     @JoinColumn(name = "teacher_id")
     private Person teacher;
 
-    @ManyToMany(mappedBy = "offeredCourseList", fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "enrollments",
+            joinColumns = @JoinColumn(name = "offeres_course_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id")
+    )
     private List<Person> studentList;
 
     @ManyToOne
     private Term term;
 
-    @OneToMany(mappedBy = "offeredCourse")
+    @OneToMany(mappedBy = "offeredCourse", fetch = FetchType.LAZY)
     private List<ExamTemplate> examTemplates;
 
 }
