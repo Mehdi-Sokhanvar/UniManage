@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 
 public class CourseDto {
 
-    private String courseName;
+    private Long id;
+    private String name;
     private String majorName;
 
 }

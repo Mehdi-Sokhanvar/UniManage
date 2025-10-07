@@ -2,6 +2,8 @@ package org.unimanage.service.imple;
 
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.unimanage.domain.course.Course;
 import org.unimanage.domain.course.Major;
@@ -20,47 +22,48 @@ public class CourseServiceImpl extends BaseServiceImpl<Course, Long> implements 
 
     private final CourseRepository courseRepository;
     private final MajorRepository majorRepository;
+    private final MessageSource messageSource;
 
-    public CourseServiceImpl(CourseRepository courseRepository, MajorRepository majorRepository) {
-        super(courseRepository);
+    public CourseServiceImpl(CourseRepository courseRepository, MajorRepository majorRepository, MessageSource messageSource) {
+        super(courseRepository,messageSource);
         this.courseRepository = courseRepository;
         this.majorRepository = majorRepository;
+        this.messageSource = messageSource;
     }
 
 
     @Override
     protected void prePersist(Course entity) {
-        Long majorId = entity.getMajor().getId();
-        Major major = majorRepository.findById(majorId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ENTITY_NOT_FOUND.format(entity.getMajor().getId())));
-        if (!major.getActive()) {
-            throw new AccessDeniedException(ErrorMessage.MAJOR_INACTIVE.format());
-        }
-//        if (courseRepository.existsByMajorAndCourseName(major, entity.getName())) {
-//            throw new DuplicateEntityException(ErrorMessage.COURSE_ALREADY_EXISTS.format());
-//        }
-        entity.setActive(true);
+        Major major = majorRepository.findByName(entity.getMajor().getName())
+                .orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("ENTITY_NOT_FOUND",new Object[]{entity.getMajor().getName()}, LocaleContextHolder.getLocale())));
 
+        if (courseRepository.existsByMajorAndName(major, entity.getName())) {
+            throw new DuplicateEntityException(messageSource.getMessage("course.duplicate",new Object[]{entity.getName()}, LocaleContextHolder.getLocale()));
+        }
+        entity.setActive(true);
+        entity.setMajor(major);
+    }
+
+    @Override
+    protected void preUpdate(Course entity) {
+        Major major = majorRepository.findByName(entity.getMajor().getName())
+                .orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("ENTITY_NOT_FOUND",new Object[]{entity.getMajor().getName()}, LocaleContextHolder.getLocale())));
+
+        if (courseRepository.existsByMajorAndName(major, entity.getName())) {
+            throw new DuplicateEntityException(messageSource.getMessage("course.duplicate",new Object[]{entity.getName()}, LocaleContextHolder.getLocale()));
+        }
+        entity.setActive(true);
+        entity.setMajor(major);
     }
 
     @Override
     public void deleteById(Long id) {
         Course course = courseRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ENTITY_NOT_FOUND.format(id)));
+                .orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("ENTITY_NOT_FOUND",new Object[]{id}, LocaleContextHolder.getLocale())));
         course.setActive(false);
         courseRepository.save(course);
     }
 
-
-    @Override
-    public Course findById(Long id) {
-        Course course = courseRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ENTITY_NOT_FOUND.format(id)));
-        if (course.getActive()) {
-            return course;
-        }
-        throw new AccessDeniedException(ErrorMessage.COURSE_NOT_ACTIVE.format(course.getId()));
-    }
 
     @Override
     public List<Course> findAll() {
