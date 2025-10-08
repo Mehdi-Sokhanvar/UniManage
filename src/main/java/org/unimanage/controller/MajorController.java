@@ -38,7 +38,6 @@ public class MajorController {
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @PostMapping
-    @Operation(summary = "Create a new major", description = "Creates a new academic major")
     public ResponseEntity<ApiResponse<MajorDto>> create(@RequestBody MajorDto majorDto) {
         Major persist = majorService.persist(majorMapper.toEntity(majorDto));
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -54,7 +53,6 @@ public class MajorController {
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @PutMapping("{id}")
-    @Operation(summary = "Update a major", description = "Updates an existing academic major")
     public ResponseEntity<ApiResponse<MajorDto>> update( @PathVariable Long id,@RequestBody MajorDto majorDto) {
         majorDto.setId(id);
         Major persist = majorService.persist(majorMapper.toEntity(majorDto));
@@ -71,7 +69,6 @@ public class MajorController {
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @GetMapping("/{id}")
-    @Operation(summary = "Get major by ID", description = "Retrieves a specific major by its ID")
     public ResponseEntity<ApiResponse<MajorDto>> getMajor(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(
@@ -86,7 +83,6 @@ public class MajorController {
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @GetMapping("/course/{id}")
-    @Operation(summary = "Get major course", description = "Retrieves all of the course major")
     public ResponseEntity<ApiResponse<List<CourseDto>>> getMajorCourse(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(
@@ -103,7 +99,6 @@ public class MajorController {
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @GetMapping
-    @Operation(summary = "Get all majors", description = "Retrieves all of the majors ")
     public ResponseEntity<ApiResponse<List<MajorDto>>> findAll() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(

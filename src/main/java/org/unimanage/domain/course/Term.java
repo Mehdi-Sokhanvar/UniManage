@@ -24,6 +24,7 @@ public class Term extends BaseModel<Long> {
 
     @Enumerated(EnumType.STRING)
     private TermType termType;
+
     private int year;
     private LocalDateTime startTime;
     private LocalDateTime endTime;

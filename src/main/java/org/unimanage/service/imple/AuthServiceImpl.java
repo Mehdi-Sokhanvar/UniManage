@@ -169,7 +169,6 @@ public class AuthServiceImpl extends BaseServiceImpl<Person, Long> implements Au
         personRepository.save(person);
     }
 
-
     @Override
     public Set<Role> getPersonRoles(Principal principal) {
         String username = principal.getName();

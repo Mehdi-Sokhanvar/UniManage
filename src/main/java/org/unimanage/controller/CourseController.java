@@ -32,13 +32,12 @@ public class CourseController {
     private final CourseMapper courseMapper;
     private final MessageSource messageSource;
 
-    private static final String ADMIN_OR_MANAGER = "hasRole('ADMIN') OR hasRole('MANAGER')";
+    private static final String ADMIN_OR_MANAGER= "hasRole('ADMIN') OR hasRole('MANAGER')";
     private static final String ALL_AUTHENTICATED = "hasRole('ADMIN') OR hasRole('MANAGER') OR hasRole('STUDENT')";
 
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @PostMapping
-    @Operation(summary = "Create a new course", description = "Creates a new academic course. Requires ADMIN or MANAGER role.")
     public ResponseEntity<ApiResponse<CourseDto>> createCourse(@RequestBody CourseDto request) {
 
         Course createdCourse = courseService.persist(courseMapper.toEntity(request));
@@ -54,7 +53,6 @@ public class CourseController {
 
     @PutMapping("/{id}")
     @PreAuthorize(ADMIN_OR_MANAGER)
-    @Operation(summary = "Update a course", description = "Updates an existing course. Requires ADMIN or MANAGER role.")
     public ResponseEntity<ApiResponse<CourseDto>> updateCourse(@PathVariable Long id,
                                                                @RequestBody CourseDto request) {
 
@@ -74,7 +72,6 @@ public class CourseController {
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @GetMapping
-    @Operation(summary = "Get all courses", description = "Retrieves all of the major courses")
     public ResponseEntity<ApiResponse<List<CourseDto>>> getAllCourses() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.<List<CourseDto>>builder()
@@ -90,7 +87,6 @@ public class CourseController {
 
     @PreAuthorize(ALL_AUTHENTICATED)
     @GetMapping("major/{majorId}")
-    @Operation(summary = "Get courses by major", description = "Retrieves all courses for a specific major")
     public ResponseEntity<ApiResponse<List<CourseDto>>> getCourseByMajor(@PathVariable Long majorId) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.<List<CourseDto>>builder()
