@@ -79,6 +79,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> timeProblemException(HttpServletRequest request, TimeProblemException e) {
         return buildErrorResponse(request, HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
     }
+    @ExceptionHandler(TermAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> termAlreadyExistsException(HttpServletRequest request, TermAlreadyExistsException e) {
+        return buildErrorResponse(request, HttpStatus.CONFLICT, e.getMessage());
+    }
 
 
 }

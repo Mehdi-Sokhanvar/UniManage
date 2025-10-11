@@ -34,7 +34,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<AccountResponse>> registerStudent(@RequestBody PersonRegisterDto accountDto, Locale locale) {
         Person persistPerson = personMapper.toEntity(accountDto);
-        authService.registerPerson(persistPerson,"STUDENT");
+        authService.registerPerson(persistPerson, "STUDENT");
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.<AccountResponse>builder()
                         .success(true)
@@ -80,9 +80,6 @@ public class AuthController {
 
 
     // HttpServletRequest
-
-
-
 
 
 }

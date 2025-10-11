@@ -9,6 +9,8 @@ import org.unimanage.domain.course.Term;
 import org.unimanage.util.dto.TermDto;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Mapper(componentModel = "spring")
 public abstract class TermMapper implements GenericMapper<Term, TermDto> {
@@ -22,16 +24,17 @@ public abstract class TermMapper implements GenericMapper<Term, TermDto> {
 
     @AfterMapping
     public void AfterToEntity(TermDto termDto, @MappingTarget Term entity) {
-//        Major major = new Major();
-//        major.setId(termDto.getMajorId());
-//        entity.setStartTime(Instant.parse(termDto.getStartTime()));
-//        entity.setEndTime(Instant.parse(termDto.getEndTime()));
-//        entity.setMajor(major);
+        Major major = new Major();
+        major.setId(termDto.getId());
+        major.setName(termDto.getMajorName());
+        entity.setStartTime(LocalDate.parse(termDto.getStartTime().toString()));
+        entity.setEndTime(LocalDate.parse(termDto.getEndTime().toString()));
+        entity.setMajor(major);
     }
 
     @AfterMapping
     public void AfterToDto(Term entity, @MappingTarget TermDto termDto) {
-        termDto.setMajorId(entity.getMajor().getId());
+        termDto.setMajorName(entity.getMajor().getName());
         termDto.setMajorName(entity.getMajor().getName());
     }
 }

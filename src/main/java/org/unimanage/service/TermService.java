@@ -9,6 +9,5 @@ import java.security.Principal;
 import java.util.List;
 
 public interface TermService extends BaseService<Term,Long>{
-
-
+        List<Term> getAllTerms(Principal principal);
 }

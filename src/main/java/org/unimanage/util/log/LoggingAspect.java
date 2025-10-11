@@ -15,10 +15,10 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class LoggingAspect {
 
-    private final LogRepository repository;
-    private final HttpServletRequest request;
-    private final Authentication authentication;
-
-    public Object logAction(ProceedingJoinPoint joinPoint) throws Throwable {
-    }
+//    private final LogRepository repository;
+//    private final HttpServletRequest request;
+//    private final Authentication authentication;
+//
+//    public Object logAction(ProceedingJoinPoint joinPoint) throws Throwable {
+//    }
 }

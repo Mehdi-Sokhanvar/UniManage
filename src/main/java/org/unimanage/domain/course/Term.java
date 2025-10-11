@@ -7,6 +7,7 @@ import org.unimanage.domain.BaseModel;
 import org.unimanage.util.enumration.TermStatus;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,9 +26,10 @@ public class Term extends BaseModel<Long> {
     @Enumerated(EnumType.STRING)
     private TermType termType;
 
-    private int year;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private Long year;
+
+    private LocalDate startTime;
+    private LocalDate endTime;
 
     @Enumerated(EnumType.STRING)
     private TermStatus termStatus;
