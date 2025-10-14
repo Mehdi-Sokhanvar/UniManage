@@ -1,7 +1,8 @@
 package org.unimanage.domain.course;
 
-public enum TermType {
+public enum Semester {
     SUMMER,
     FALL,
     WINTER,
+    SPRING,
 }

@@ -34,20 +34,14 @@ public class OfferedCourse extends BaseModel<Long> {
 
     private Integer capacity;
 
-    private String classLocation;
 
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     private Person teacher;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "enrollments",
-            joinColumns = @JoinColumn(name = "offeres_course_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id")
-    )
-    private List<Person> studentList;
+    @OneToMany
+    private List<StudentCourseRegistration> studentCourseRegistrations;
 
     @ManyToOne
     private Term term;

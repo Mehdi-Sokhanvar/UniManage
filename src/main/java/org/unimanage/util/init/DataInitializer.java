@@ -35,51 +35,51 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         Role adminRole = roleRepository.save(Role.builder().name("ADMIN").build());
-        Role studentRole = roleRepository.save(Role.builder().name("STUDENT").build());
-        Role instructorRole = roleRepository.save(Role.builder().name("TEACHER").build());
-        Role managerRole = roleRepository.save(Role.builder().name("MANAGER").build());
-        Role userRole = roleRepository.save(Role.builder().name("USER").build());
-        accountRepository.save(
-                Account.builder()
-                        .person(Person.builder()
-                                .nationalCode("123456789")
-                                .email("admin@gmail.com")
-                                .build())
-                        .username("admin")
-                        .password(passwordEncoder.encode("1234567890"))
-
-                        .authId(UUID.fromString("a2fa45dd-8ffb-4e20-8b32-313a5bb046bc"))
-                        .person(Person.builder().roles(Set.of(adminRole, userRole)).build())
-                        .status(AccountStatus.ACTIVE)
-
-                        .build()
-        );
-        accountRepository.save(
-                Account.builder()
-                        .person(Person.builder()
-                                .nationalCode("123456789")
-                                .email("admin@gmail.com")
-                                .build())
-                        .username("manager")
-                        .password(passwordEncoder.encode("1234567890"))
-                        .person(Person.builder().roles(Set.of(managerRole, userRole)).build())
-
-                        .status(AccountStatus.ACTIVE)
-                        .build()
-        );
-
-        majorRepository.save(Major.builder()
-                .name("علوم کامپیوتر")
-                .numberOfUnits(70)
-                .build());
-        majorRepository.save(Major.builder()
-                .name("الکترونیک ")
-                .numberOfUnits( 70)
-                .build());
-        majorRepository.save(Major.builder()
-                .name("برق ")
-                .numberOfUnits(70)
-                .build());
+//        Role studentRole = roleRepository.save(Role.builder().name("STUDENT").build());
+//        Role instructorRole = roleRepository.save(Role.builder().name("TEACHER").build());
+//        Role managerRole = roleRepository.save(Role.builder().name("MANAGER").build());
+//        Role userRole = roleRepository.save(Role.builder().name("USER").build());
+//        accountRepository.save(
+//                Account.builder()
+//                        .person(Person.builder()
+//                                .nationalCode("123456789")
+//                                .email("admin@gmail.com")
+//                                .build())
+//                        .username("admin")
+//                        .password(passwordEncoder.encode("1234567890"))
+//
+//                        .authId(UUID.fromString("a2fa45dd-8ffb-4e20-8b32-313a5bb046bc"))
+//                        .person(Person.builder().roles(Set.of(adminRole, userRole)).build())
+//                        .status(AccountStatus.ACTIVE)
+//
+//                        .build()
+//        );
+//        accountRepository.save(
+//                Account.builder()
+//                        .person(Person.builder()
+//                                .nationalCode("123456789")
+//                                .email("admin@gmail.com")
+//                                .build())
+//                        .username("manager")
+//                        .password(passwordEncoder.encode("1234567890"))
+//                        .person(Person.builder().roles(Set.of(managerRole, userRole)).build())
+//
+//                        .status(AccountStatus.ACTIVE)
+//                        .build()
+//        );
+//
+//        majorRepository.save(Major.builder()
+//                .name("علوم کامپیوتر")
+//                .numberOfUnits(70)
+//                .build());
+//        majorRepository.save(Major.builder()
+//                .name("الکترونیک ")
+//                .numberOfUnits( 70)
+//                .build());
+//        majorRepository.save(Major.builder()
+//                .name("برق ")
+//                .numberOfUnits(70)
+//                .build());
 
 
     }

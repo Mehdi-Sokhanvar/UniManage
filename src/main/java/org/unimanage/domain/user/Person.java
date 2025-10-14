@@ -6,6 +6,7 @@ import lombok.experimental.SuperBuilder;
 import org.unimanage.domain.BaseModel;
 import org.unimanage.domain.course.Major;
 import org.unimanage.domain.course.OfferedCourse;
+import org.unimanage.domain.course.StudentCourseRegistration;
 import org.unimanage.domain.exam.ExamInstance;
 import org.unimanage.util.enumration.Degree;
 
@@ -45,8 +46,8 @@ public class Person extends BaseModel<Long> {
     private List<ExamInstance> examInstanceList;
 
 
-    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "studentList")
-    private List<OfferedCourse> offeredCourseList;
+    @OneToMany
+    private List<StudentCourseRegistration> studentCourseRegistrations;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Major major;

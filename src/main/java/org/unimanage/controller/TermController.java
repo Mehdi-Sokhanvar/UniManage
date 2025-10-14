@@ -1,18 +1,23 @@
 package org.unimanage.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.unimanage.domain.course.Term;import org.unimanage.service.TermService;
+import org.unimanage.domain.course.Term;
+import org.unimanage.service.TermService;
 import org.unimanage.util.dto.ApiResponse;
 import org.unimanage.util.dto.TermDto;
 import org.unimanage.util.dto.mapper.TermMapper;
 
+import javax.swing.plaf.PanelUI;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,11 +34,13 @@ public class TermController {
 
     private static final String ADMIN_OR_MANAGER = "hasRole('ADMIN') OR hasRole('MANAGER')";
     private static final String ALL_AUTHENTICATED = "hasRole('ADMIN') OR hasRole('MANAGER') OR hasRole('STUDENT')";
+    private static final String STUDENT_OR_MANAGER = "hasRole('STUDENT') OR hasRole('MANAGER')";
 
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @PostMapping
-    public ResponseEntity<ApiResponse<TermDto>> createTerm(@RequestBody TermDto termDto) {
+    public ResponseEntity<ApiResponse<TermDto>> createTerm(@Valid
+                                                           @RequestBody TermDto termDto) {
 
         Term entity = termMapper.toEntity(termDto);
         Term persist = termService.persist(entity);
@@ -48,7 +55,9 @@ public class TermController {
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<TermDto>> updateTerm(@PathVariable Long id, @RequestBody TermDto termDto) {
+    public ResponseEntity<ApiResponse<TermDto>> updateTerm(@PathVariable Long id,
+                                                           @Valid
+                                                           @RequestBody TermDto termDto) {
         Term entity = termMapper.toEntity(termDto);
         entity.setId(id);
         Term persist = termService.persist(entity);
@@ -89,6 +98,25 @@ public class TermController {
                         .timestamp(Instant.now().toString())
                         .build());
     }
+
+
+
+    @PreAuthorize(STUDENT_OR_MANAGER)
+    @GetMapping("/student")
+    public ResponseEntity<ApiResponse<List<TermDto>>> getStudentTerms(Authentication authentication) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.<List<TermDto>>builder()
+                        .success(true)
+                        .message(messageSource.getMessage("term.listed", null, LocaleContextHolder.getLocale()))
+                        .data(
+                                termService.getAllTerms(authentication.getName()).stream()
+                                        .map(termMapper::toDTO)
+                                        .collect(Collectors.toList())
+                        )
+                        .build());
+    }
+
+
 
 
 }

@@ -1,5 +1,8 @@
 package org.unimanage.util.enumration;
 
 public enum TermStatus {
-    ACTIVE, OPENED , INACTIVE, CLOSED
+    INACTIVE, //manger create term
+
+    OPENED, // term is started
+    CLOSED // term is end
 }

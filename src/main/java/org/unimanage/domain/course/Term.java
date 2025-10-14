@@ -24,19 +24,16 @@ import java.util.List;
 public class Term extends BaseModel<Long> {
 
     @Enumerated(EnumType.STRING)
-    private TermType termType;
+    private Semester semester;
 
-    private Long year;
-
-    private LocalDate startTime;
-    private LocalDate endTime;
-
-    @Enumerated(EnumType.STRING)
-    private TermStatus termStatus;
+    private int year;
 
     @ManyToOne
     private Major major;
 
     @OneToMany(mappedBy = "term" ,cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
     private List<OfferedCourse>  offeredCourses;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private AcademicCalendar academicCalendar;
 }

@@ -9,11 +9,6 @@ import java.util.List;
 
 public interface CourseOfferingService extends BaseService<OfferedCourse, Long> {
 
-    boolean chooseCourseOffering(Principal principal, OfferedCourse offeredCourse);
-
-    List<OfferedCourse> getOfferedCourse(Principal principal);
-
-    List<OfferedCourse> getOfferedCourseByTermId(Long termId);
 
 
 }

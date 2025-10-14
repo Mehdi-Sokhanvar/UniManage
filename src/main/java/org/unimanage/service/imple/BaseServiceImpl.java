@@ -37,8 +37,7 @@ public abstract class BaseServiceImpl<T extends BaseModel<ID>, ID extends Serial
         if (isNew) {
             prePersist(entity);
         } else {
-            T entityNotFound = repository.findById(entity.getId()).orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("ENTITY_NOT_FOUND", new Object[]{entity.getId()}, LocaleContextHolder.getLocale())));
-//            entity.setId(entityNotFound.getId());
+            repository.findById(entity.getId()).orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("ENTITY_NOT_FOUND", new Object[]{entity.getId()}, LocaleContextHolder.getLocale())));
             preUpdate(entity);
         }
 
@@ -54,7 +53,7 @@ public abstract class BaseServiceImpl<T extends BaseModel<ID>, ID extends Serial
 
     @Override
     public T findById(ID id) {
-        return repository.findById(id).orElseThrow(()-> new EntityNotFoundException(ENTITY_NOT_FOUND));
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND));
     }
 
     @Override

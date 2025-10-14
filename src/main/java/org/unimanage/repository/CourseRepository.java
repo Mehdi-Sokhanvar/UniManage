@@ -15,4 +15,6 @@ public interface CourseRepository extends JpaRepository<Course,Long> {
     List<Course> findCourseByActiveIsTrue();
 
     boolean existsByMajorAndName(Major major, String name);
+
+    List<Course> findCourseByMajor_Name(String majorName);
 }

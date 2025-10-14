@@ -4,6 +4,7 @@ import org.aspectj.lang.annotation.After;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import org.unimanage.domain.course.AcademicCalendar;
 import org.unimanage.domain.course.Major;
 import org.unimanage.domain.course.Term;
 import org.unimanage.util.dto.TermDto;
@@ -24,17 +25,30 @@ public abstract class TermMapper implements GenericMapper<Term, TermDto> {
 
     @AfterMapping
     public void AfterToEntity(TermDto termDto, @MappingTarget Term entity) {
-        Major major = new Major();
-        major.setId(termDto.getId());
-        major.setName(termDto.getMajorName());
-        entity.setStartTime(LocalDate.parse(termDto.getStartTime().toString()));
-        entity.setEndTime(LocalDate.parse(termDto.getEndTime().toString()));
-        entity.setMajor(major);
+        entity.setMajor(Major.builder()
+                .name(termDto.getMajorName())
+                .build());
+        entity.setAcademicCalendar(AcademicCalendar.builder()
+                .classesEnd(termDto.getClassesEnd())
+                .classesStart(termDto.getClassesStart())
+                .courseRegistrationStart(termDto.getCourseRegistrationStart())
+                .courseRegistrationEnd(termDto.getCourseRegistrationEnd())
+                .addDropEnd(termDto.getAddDropEnd())
+                .addDropStart(termDto.getAddDropStart())
+                .build());
     }
 
     @AfterMapping
     public void AfterToDto(Term entity, @MappingTarget TermDto termDto) {
         termDto.setMajorName(entity.getMajor().getName());
-        termDto.setMajorName(entity.getMajor().getName());
+
+        termDto.setCourseRegistrationStart(entity.getAcademicCalendar().getCourseRegistrationStart());
+        termDto.setCourseRegistrationEnd(entity.getAcademicCalendar().getCourseRegistrationEnd());
+        termDto.setClassesStart(entity.getAcademicCalendar().getClassesStart());
+        termDto.setClassesEnd(entity.getAcademicCalendar().getClassesEnd());
+        termDto.setAddDropEnd(entity.getAcademicCalendar().getAddDropEnd());
+        termDto.setAddDropStart(entity.getAcademicCalendar().getAddDropStart());
+
+
     }
 }

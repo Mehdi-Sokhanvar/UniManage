@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface PersonRepository extends JpaRepository<Person,Long> {
     Optional<Person> findByNationalCode(String nationalCode);
     boolean existsByNationalCode(String nationalCode);
+    List<Person> findAllByMajor_Name(String majorName);
 //    boolean existsPersonByIdContains(Long personId, String roleName);
 
 //    List<Role> findRolesB(Long personId);
