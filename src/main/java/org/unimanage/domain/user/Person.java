@@ -45,11 +45,10 @@ public class Person extends BaseModel<Long> {
     @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
     private List<ExamInstance> examInstanceList;
 
-
-    @OneToMany
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
     private List<StudentCourseRegistration> studentCourseRegistrations;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Major major;
 
     @OneToOne(mappedBy = "person", fetch = FetchType.EAGER)

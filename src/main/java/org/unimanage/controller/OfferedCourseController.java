@@ -11,9 +11,14 @@ import org.unimanage.domain.course.OfferedCourse;
 import org.unimanage.service.CourseOfferingService;
 import org.unimanage.util.dto.ApiResponse;
 import org.unimanage.util.dto.OfferedCourseDTO;
+import org.unimanage.util.dto.StudentCourse;
+import org.unimanage.util.dto.StudentScheduleDto;
 import org.unimanage.util.dto.mapper.OfferedCourseMapper;
+import org.unimanage.util.dto.mapper.StudentScheduleMapper;
 
+import java.security.Principal;
 import java.time.Instant;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +27,8 @@ public class OfferedCourseController {
 
     private final CourseOfferingService courseOfferingService;
     private final OfferedCourseMapper mapper;
+    private final StudentScheduleMapper scheduleMapper;
+
 
     @PostMapping
     @PreAuthorize("hasRole('MANAGER')")
@@ -67,13 +74,33 @@ public class OfferedCourseController {
     // student get all course term
     // student can print
 
-//    @GetMapping("/{termId}")
-//    @PreAuthorize("hasRole('STUDENT') OR @securityService.")
-//    public ResponseEntity<ApiResponse<OfferedCourseDTO>> getOfferedCourse(@PathVariable Long termId) {
-//
-//
-//    }
+    @GetMapping("/{termId}")
+    @PreAuthorize("hasRole('STUDENT') AND @securityService.isStudentOfMajor(#termId)")
+    public ResponseEntity<List<StudentScheduleDto>> getOfferedCourse(@PathVariable Long termId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(
+                        courseOfferingService.findOfferedCoursesByTermId(termId).stream()
+                                .map(scheduleMapper::toDTO)
+                                .toList()
+                );
+    }
 
+
+    @PostMapping("/{termId}/take-course/{courseId}")
+    @PreAuthorize("hasRole('STUDENT') AND @securityService.isStudentOfMajor(#termId)")
+    public ResponseEntity<String> studentGetCourse(@PathVariable Long courseId, Principal principal, @PathVariable String termId) {
+        courseOfferingService.getStudentCourse(courseId);
+        return ResponseEntity.status(HttpStatus.CREATED).body("success get Course");
+    }
+
+
+    @GetMapping("/get-student/{offeredCourseId}")
+    @PreAuthorize("hasRole('TEACHER') AND @securityService.isTeacherOfOfferedCourse(#offeredCourseId)")
+    public ResponseEntity<List<StudentCourse>> teacherGetAllCourseWithStudent(@PathVariable Long offeredCourseId) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                courseOfferingService.getAllStudentsByOfferedCourseId(offeredCourseId)
+        );
+    }
 
 
 }

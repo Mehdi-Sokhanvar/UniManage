@@ -40,7 +40,7 @@ public class OfferedCourse extends BaseModel<Long> {
     @JoinColumn(name = "teacher_id")
     private Person teacher;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "course")
     private List<StudentCourseRegistration> studentCourseRegistrations;
 
     @ManyToOne

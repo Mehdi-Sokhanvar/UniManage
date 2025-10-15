@@ -9,6 +9,7 @@ import org.unimanage.domain.BaseModel;
 import org.unimanage.domain.user.Person;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -31,6 +32,6 @@ public class StudentCourseRegistration extends BaseModel<Long> {
 
     private Double grade;
 
-    private LocalDate registration;
+    private LocalDateTime registration;
 
 }
