@@ -19,7 +19,6 @@ import java.util.Set;
 @NoArgsConstructor
 
 
-
 @Entity
 @Table(name = "person")
 public class Person extends BaseModel<Long> {
@@ -34,13 +33,16 @@ public class Person extends BaseModel<Long> {
 
     private String phoneNumber;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "person_role",
-            joinColumns = @JoinColumn(name = "person_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Account account;
+
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(
+//            name = "person_role",
+//            joinColumns = @JoinColumn(name = "person_id"),
+//            inverseJoinColumns = @JoinColumn(name = "role_id")
+//    )
+//    private Set<Role> roles;
 
     @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
     private List<ExamInstance> examInstanceList;
@@ -51,8 +53,6 @@ public class Person extends BaseModel<Long> {
     @ManyToOne
     private Major major;
 
-    @OneToOne(mappedBy = "person", fetch = FetchType.EAGER)
-    private Account account;
 
 }
 

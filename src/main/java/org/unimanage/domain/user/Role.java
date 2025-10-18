@@ -22,7 +22,10 @@ public class Role extends BaseModel<Long> {
 
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
-    private List<Person> persons;
+//    @ManyToMany(mappedBy = "roles")
+//    private List<Person> persons;
+
+   @ManyToMany(mappedBy = "roles")
+    private List<Account> accounts;
 
 }

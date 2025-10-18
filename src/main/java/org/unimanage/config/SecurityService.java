@@ -10,6 +10,7 @@ import org.unimanage.domain.user.Account;
 import org.unimanage.domain.user.Person;
 import org.unimanage.repository.AccountRepository;
 import org.unimanage.repository.OfferedCourseRepository;
+import org.unimanage.repository.PersonRepository;
 import org.unimanage.repository.TermRepository;
 import org.unimanage.util.dto.OfferedCourseTeacherDto;
 import org.unimanage.util.exception.AccessDeniedException;
@@ -22,6 +23,7 @@ public class SecurityService {
     private final TermRepository termRepository;
     private final AccountRepository accountRepository;
     private final OfferedCourseRepository offeredCourseRepository;
+    private final PersonRepository personRepository;
 
     public boolean isManagerOfMajor(String majorName) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -30,24 +32,24 @@ public class SecurityService {
     }
 
     public boolean isStudentOfMajor(Long termId) {
-        Account account = accountRepository.findByUsername(
-                SecurityContextHolder.getContext().getAuthentication().getName()).get();
+
+        Person person = personRepository.findByNationalCode(SecurityContextHolder.getContext().getAuthentication().getName()).get();
         Term term = termRepository.findById(termId).orElseThrow(() -> new EntityNotFoundException("Term not found"));
-        return term.getMajor().getName().equals(account.getPerson().getMajor().getName());
+        return term.getMajor().getName().equals(person.getMajor().getName());
 
     }
 
     public boolean isTeacherOfMajor(Long termId) {
-        Account account = accountRepository.findByUsername(
-                SecurityContextHolder.getContext().getAuthentication().getName()).get();
+        Person person = personRepository.findByNationalCode(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+
         Term term = termRepository.findById(termId).orElseThrow(() -> new EntityNotFoundException("Term not found"));
-        return term.getMajor().getName().equals(account.getPerson().getMajor().getName());
+        return term.getMajor().getName().equals(person.getMajor().getName());
     }
 
     public boolean isTeacherOfOfferedCourse(Long offeredCourseId) {
-        Account account = accountRepository.findByUsername(
-                SecurityContextHolder.getContext().getAuthentication().getName()).get();
+        Person person = personRepository.findByNationalCode(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+
         OfferedCourse offeredCourse = offeredCourseRepository.findById(offeredCourseId).get();
-        return offeredCourse.getTeacher().getId().equals(account.getPerson().getId());
+        return offeredCourse.getTeacher().getId().equals(person.getId());
     }
 }

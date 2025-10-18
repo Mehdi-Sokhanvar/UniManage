@@ -5,6 +5,9 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.unimanage.domain.BaseModel;
 import org.unimanage.util.enumration.AccountStatus;
+
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -24,12 +27,16 @@ public class Account extends BaseModel<Long> {
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private Person person;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "account_role",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles=new HashSet<>();
 
     private UUID authId;
 
-//    @ManyToOne
-//    private Role activeRole;
+
 
 }

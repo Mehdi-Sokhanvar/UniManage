@@ -47,16 +47,16 @@ public class AdminController {
 
 
     private ResponseEntity<ApiResponse<AccountResponse>> registerPerson(PersonRegisterDto accountDto, String role, Locale locale) {
-        Person persistPerson = personMapper.toEntity(accountDto);
+        Person entity = personMapper.toEntity(accountDto);
 
-        authService.registerPerson(persistPerson,role);
-
+        Person persist = authService.persist(entity);
+        authService.addRoleToAccount(role,persist.getAccount().getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.<AccountResponse>builder()
                         .success(true)
                         .message(messageSource.getMessage("user.register.success", new Object[]{accountDto.getMajorName()}, locale))
                         .data(AccountResponse.builder()
-                                .username(persistPerson.getNationalCode())
+                                .username(entity.getNationalCode())
                                 .major(accountDto.getMajorName())
                                 .build())
                         .timestamp(Instant.now().toString())
@@ -68,7 +68,7 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/users/{personId}/roles")
     public ResponseEntity<String> addRoleToPerson(@PathVariable Long personId, @RequestBody AddRoleRequest request, Locale locale) {
-        authService.addRoleToPerson(request.getRoleName(), personId);
+        authService.addRoleToAccount(request.getRoleName(), personId);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 messageSource.getMessage("success.add.role", new Object[]{request.getRoleName()}, locale)
         );

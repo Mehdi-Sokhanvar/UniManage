@@ -61,9 +61,9 @@ public class CourseOfferingServiceImpl extends BaseServiceImpl<OfferedCourse, Lo
                 .orElseThrow(() -> new EntityNotFoundException("Term not found"));
         Person teacher = personRepository.findById(entity.getTeacher().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Teacher not found"));
-        if (!teacher.getRoles().contains(roleRepository.findByName("TEACHER").get())) {
-            throw new AccessDeniedException("Access denied");
-        }
+//        if (!teacher.getRoles().contains(roleRepository.findByName("TEACHER").get())) {
+//            throw new AccessDeniedException("Access denied");
+//        }
 //        List<OfferedCourse> offeredCourses =
 //                offeredCourseRepository.findByTeacherIdAndDayOfWeek(teacher.getId(), entity.getDayOfWeek());
 //        for (OfferedCourse existing : offeredCourses) {
@@ -112,15 +112,15 @@ public class CourseOfferingServiceImpl extends BaseServiceImpl<OfferedCourse, Lo
         }
         Account account = accountRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
 
-        if (studentRegistrationRepository.existsByStudentIdAndCourseIdAndCourseStatusIn
-                (account.getPerson().getId(), courseId, List.of(CourseStatus.PASSED, CourseStatus.IN_PROGRESS))) {
-            throw new AccessDeniedException("Access denied c");
-        }
+//        if (studentRegistrationRepository.existsByStudentIdAndCourseIdAndCourseStatusIn
+//                (account.getPerson().getId(), courseId, List.of(CourseStatus.PASSED, CourseStatus.IN_PROGRESS))) {
+//            throw new AccessDeniedException("Access denied c");
+//        }
         offeredCourse.setCapacity(offeredCourse.getCapacity() - 1);
         studentRegistrationRepository.save(
                 StudentCourseRegistration.builder()
                         .course(offeredCourse)
-                        .student(account.getPerson())
+//                        .student(account.getPerson())
                         .registration(LocalDateTime.now())
                         .courseStatus(CourseStatus.IN_PROGRESS)
                         .grade(0.0)
@@ -172,13 +172,15 @@ public class CourseOfferingServiceImpl extends BaseServiceImpl<OfferedCourse, Lo
 //        return courseRegistrationDTO;  i think this code is not good because use a lot of getter (N+1 Query Problem)
 
         Account account = accountRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
-        return studentRegistrationRepository.findAllStudentCourse(account.getPerson().getId(), termId);
+//        return studentRegistrationRepository.findAllStudentCourse(account.getPerson().getId(), termId);
+        return null;
     }
 
     @Override
     public List<OfferedCourse> getTeacherScheduleTime(Long termId) {
-        Account account = accountRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
-        return offeredCourseRepository.findAllByTeacher_IdAndTerm_Id(account.getPerson().getId(), termId);
+//        Account account = accountRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+//        return offeredCourseRepository.findAllByTeacher_IdAndTerm_Id(account.getPerson().getId(), termId);
+        return null;
     }
 
     @Override
