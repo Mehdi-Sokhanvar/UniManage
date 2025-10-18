@@ -7,11 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.unimanage.util.dto.ErrorResponse;
 
 import java.time.Instant;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -38,6 +40,16 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(request, HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
     }
 
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> errorResponse(HttpServletRequest request, MethodArgumentNotValidException exception) {
+
+        String message = exception.getBindingResult().getFieldErrors().stream()
+                .map(error->error.getField() +": " + error.getDefaultMessage())
+                .collect(Collectors.joining(";"));
+
+        return buildErrorResponse(request, HttpStatus.BAD_REQUEST, message);
+    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorResponse> entityNotFoundException(HttpServletRequest request, EntityNotFoundException e) {
