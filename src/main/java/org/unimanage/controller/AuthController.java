@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,63 +24,39 @@ import java.util.Locale;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@Tag(name = "Auth Management", description = "Endpoints for managing register,login")
+@Tag(name = "Auth Controller", description = "Endpoints for managing register,login")
 public class AuthController {
 
-    private final PersonMapper personMapper;
     private final AuthService authService;
+    private final PersonMapper personMapper;
     private final MessageSource messageSource;
 
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<AccountResponse>> registerStudent(@RequestBody PersonRegisterDto accountDto, Locale locale) {
+    public ResponseEntity<AccountResponse> registerStudent(@RequestBody PersonRegisterDto accountDto) {
         Person persistPerson = personMapper.toEntity(accountDto);
         authService.registerPerson(persistPerson, "STUDENT");
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                ApiResponse.<AccountResponse>builder()
-                        .success(true)
-                        .message(messageSource.getMessage("student.register.success", new Object[]{persistPerson.getFirstName(), persistPerson.getMajor().getName()}, locale))
-                        .data(AccountResponse.builder()
-                                .username(persistPerson.getNationalCode())
-                                .major(accountDto.getMajorName())
-                                .build())
-                        .timestamp(Instant.now().toString())
+                AccountResponse.builder()
+                        .username(persistPerson.getNationalCode())
+                        .major(accountDto.getMajorName())
                         .build()
         );
     }
 
-
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthResponseDto>> login(@RequestBody AccountRequestDto request, Locale locale) {
+    public ResponseEntity<AuthResponseDto> login(@RequestBody AccountRequestDto request) {
         AuthResponseDto login = authService.login(request);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.<AuthResponseDto>builder()
-                        .success(true)
-                        .message(messageSource.getMessage("user.login.success", new Object[]{request.getUsername()}, locale))
-                        .data(login)
-                        .timestamp(Instant.now().toString())
-                        .build()
-        );
+        return ResponseEntity.status(HttpStatus.OK).body(login);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<String>> logout(@RequestHeader(value = "Authorization", required = false) String authorizeRequest, Locale locale) {
+    public ResponseEntity<String> logout(@RequestHeader(value = "Authorization", required = false) String authorizeRequest) {
         String token = null;
         if (authorizeRequest != null && authorizeRequest.startsWith("Bearer ")) {
             token = authorizeRequest.substring(7);
         }
         authService.logOut(token);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.<String>builder()
-                        .success(true)
-                        .timestamp(Instant.now().toString())
-                        .message(messageSource.getMessage("user.logout.success", new Object[]{token}, locale))
-                        .build()
-        );
+        return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage("user.logout.success", new Object[]{token}, LocaleContextHolder.getLocale()));
     }
-
-
-    // HttpServletRequest
-
-
 }

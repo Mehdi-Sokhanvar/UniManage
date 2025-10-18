@@ -4,6 +4,8 @@ package org.unimanage.service.imple;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import jakarta.persistence.EntityNotFoundException;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -55,7 +57,7 @@ public class AuthServiceImpl extends BaseServiceImpl<Person, Long> implements Au
                            MajorRepository majorRepository, AccountRepository accountRepository,
                            PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
                            JwtUtil jwtUtil, CustomUserDetailsService customUserDetailsService, MessageSource messageSource) {
-        super(personRepository,messageSource);
+        super(personRepository, messageSource);
         this.personRepository = personRepository;
         this.roleRepository = roleRepository;
         this.majorRepository = majorRepository;
@@ -150,10 +152,8 @@ public class AuthServiceImpl extends BaseServiceImpl<Person, Long> implements Au
         Locale locale = LocaleContextHolder.getLocale();
         Person person = personRepository.findById(personId)
                 .orElseThrow(() -> new org.unimanage.util.exception.EntityNotFoundException(messageSource.getMessage("error.person.not.found", new Object[]{personId}, locale)));
-
         boolean hasRole = person.getRoles().stream()
                 .anyMatch(r -> r.getName().equals(role));
-
         if (hasRole) {
             messageSource.getMessage(
                     "error.person.already.has.role",
@@ -161,10 +161,8 @@ public class AuthServiceImpl extends BaseServiceImpl<Person, Long> implements Au
                     locale
             );
         }
-
         Role roleExist = roleRepository.findByName(role)
                 .orElseThrow(() -> new org.unimanage.util.exception.EntityNotFoundException(messageSource.getMessage("error.role.not.found", new Object[]{role}, locale)));
-
         person.getRoles().add(roleExist);
         personRepository.save(person);
     }
@@ -181,7 +179,7 @@ public class AuthServiceImpl extends BaseServiceImpl<Person, Long> implements Au
     public void rePassword(String oldPassword, String newPassword, Principal principal) {
         String username = principal.getName();
         Account account = accountRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(ErrorMessage.USERNAME_NOT_FOUND.format(username)));
+                .orElseThrow(() -> new UsernameNotFoundException(messageSource.getMessage("account.not.found", new Object[]{username}, LocaleContextHolder.getLocale())));
         if (!passwordEncoder.matches(oldPassword, account.getPassword())) {
             throw new AccessDeniedException(messageSource.getMessage("error.password.not.match", null, LocaleContextHolder.getLocale()));
         }
@@ -212,7 +210,7 @@ public class AuthServiceImpl extends BaseServiceImpl<Person, Long> implements Au
     @Override
     public void deleteById(Long aLong) {
         Account account = accountRepository.findById(aLong)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ACCOUNT_NOT_FOUND.format(aLong)));
+                .orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("account.not.found", new Object[]{aLong}, LocaleContextHolder.getLocale())));
         account.setStatus(AccountStatus.INACTIVE);
         accountRepository.save(account);
     }
