@@ -3,6 +3,7 @@ package org.unimanage.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -33,19 +34,20 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<AccountResponse> registerStudent(@RequestBody PersonRegisterDto accountDto) {
-        Person persistPerson = personMapper.toEntity(accountDto);
-        authService.registerPerson(persistPerson, "STUDENT");
+    public ResponseEntity<AccountResponse> registerStudent(@Valid @RequestBody PersonRegisterDto accountDto) {
+        Person entity = personMapper.toEntity(accountDto);
+        Person persist = authService.persist(entity);
+        authService.addRoleToAccount("STUDENT", persist.getAccount().getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 AccountResponse.builder()
-                        .username(persistPerson.getNationalCode())
+                        .username(entity.getNationalCode())
                         .major(accountDto.getMajorName())
                         .build()
         );
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody AccountRequestDto request) {
+    public ResponseEntity<AuthResponseDto> login(@Valid @RequestBody AccountRequestDto request) {
         AuthResponseDto login = authService.login(request);
         return ResponseEntity.status(HttpStatus.OK).body(login);
     }
