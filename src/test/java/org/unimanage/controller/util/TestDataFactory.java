@@ -1,6 +1,7 @@
 package org.unimanage.controller.util;
 
 
+import org.unimanage.domain.user.Account;
 import org.unimanage.domain.user.Person;
 import org.unimanage.util.dto.PersonRegisterDto;
 
@@ -38,6 +39,5 @@ public class TestDataFactory {
                 .phoneNumber("09000000000")
                 .build();
     }
-
 
 }

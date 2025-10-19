@@ -27,11 +27,11 @@ server:
     key-store-password: unimanage #todo : use in .env
     key-store-type: PKCS12
     key-alias: myapp
-
-
+    enabled: false
 
 app:
   security:
     jwt:
       access-token-expiration: 86400000
       refresh-token-expiration: 604800000
+

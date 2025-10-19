@@ -3,6 +3,7 @@ package org.unimanage.domain.user;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.DynamicInsert;
 import org.unimanage.domain.BaseModel;
 import org.unimanage.util.enumration.AccountStatus;
 
@@ -33,7 +34,7 @@ public class Account extends BaseModel<Long> {
             joinColumns = @JoinColumn(name = "account_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles=new HashSet<>();
+    private Set<Role> roles = new HashSet<>();
 
     private UUID authId;
 

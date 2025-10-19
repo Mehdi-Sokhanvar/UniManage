@@ -74,6 +74,10 @@ public class DataInitializer implements CommandLineRunner {
                 .numberOfUnits(70)
                 .build());
         majorRepository.save(Major.builder()
+                .name("Computer")
+                .numberOfUnits(70)
+                .build());
+        majorRepository.save(Major.builder()
                 .name("الکترونیک ")
                 .numberOfUnits(70)
                 .build());

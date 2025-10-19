@@ -2,6 +2,7 @@ package org.unimanage.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -60,7 +61,7 @@ public class AdminController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/users/{personId}/roles")
-    public ResponseEntity<String> addRoleToPerson(@PathVariable Long personId, @RequestBody AddRoleRequest request, Locale locale) {
+    public ResponseEntity<String> addRoleToPerson(@PathVariable Long personId, @Valid @RequestBody AddRoleRequest request, Locale locale) {
         authService.addRoleToAccount(request.getRoleName(), personId);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 messageSource.getMessage("success.add.role", new Object[]{request.getRoleName()}, locale)

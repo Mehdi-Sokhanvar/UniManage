@@ -1,6 +1,7 @@
 package org.unimanage.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -29,8 +30,8 @@ public class PersonController {
     private final CourseOfferingService courseOfferingService;
 
     @PutMapping("/password")
-    @PreAuthorize("hasRole('STUDENT') or hasRole('MANAGER') or hasRole('ADMIN')")
-    public ResponseEntity<String> changePassword(Principal principal, @RequestBody RePasswordDto request, Locale locale) {
+    @PreAuthorize("hasRole('STUDENT') or hasRole('MANAGER') or hasRole('ADMIN') OR hasRole('TEACHER')")
+    public ResponseEntity<String> changePassword(Principal principal, @Valid @RequestBody RePasswordDto request, Locale locale) {
         authService.rePassword(request.getOldPassword(), request.getNewPassword(), principal);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(messageSource.getMessage("success.change.password", new Object[]{principal.getName()}, locale));
@@ -38,7 +39,7 @@ public class PersonController {
 
 
     @GetMapping("/roles")
-    @PreAuthorize("hasRole('STUDENT') or hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('STUDENT') or hasRole('MANAGER') or hasRole('ADMIN') OR hasRole('TEACHER')")
     public ResponseEntity<List<RoleResponse>> getPersonRoles(Principal principal, Locale locale) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(authService.getPersonRoles(principal).stream()
