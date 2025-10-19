@@ -1,17 +1,8 @@
-package org.unimange;
+package org.unimanage.controller.util;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
-import org.unimanage.domain.user.Account;
 import org.unimanage.domain.user.Person;
-import org.unimanage.repository.AccountRepository;
-import org.unimanage.repository.PersonRepository;
 import org.unimanage.util.dto.PersonRegisterDto;
-import org.unimanage.util.enumration.AccountStatus;
-
 
 
 public class TestDataFactory {

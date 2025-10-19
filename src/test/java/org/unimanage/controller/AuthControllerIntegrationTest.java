@@ -1,4 +1,4 @@
-package org.unimange;
+package org.unimanage.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.unimanage.UniManageApplication;
+import org.unimanage.controller.util.TestDataFactory;
 import org.unimanage.domain.user.Account;
 import org.unimanage.domain.user.Person;
 import org.unimanage.repository.AccountRepository;
@@ -31,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 )
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class AuthControllerTest {
+public class AuthControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
