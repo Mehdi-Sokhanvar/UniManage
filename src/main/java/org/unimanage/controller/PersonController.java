@@ -30,39 +30,22 @@ public class PersonController {
 
     @PutMapping("/password")
     @PreAuthorize("hasRole('STUDENT') or hasRole('MANAGER') or hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<String>> changePassword(Principal principal, @RequestBody RePasswordDto request, Locale locale) {
+    public ResponseEntity<String> changePassword(Principal principal, @RequestBody RePasswordDto request, Locale locale) {
         authService.rePassword(request.getOldPassword(), request.getNewPassword(), principal);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.<String>builder()
-                        .success(true)
-                        .message(messageSource.getMessage("success.change.password", new Object[]{principal.getName()}, locale))
-                        .build());
-
-    } //fixme : refactor the response api for this
+                .body(messageSource.getMessage("success.change.password", new Object[]{principal.getName()}, locale));
+    }
 
 
     @GetMapping("/roles")
     @PreAuthorize("hasRole('STUDENT') or hasRole('MANAGER') or hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<List<RoleResponse>>> getPersonRoles(Principal principal, Locale locale) {
+    public ResponseEntity<List<RoleResponse>> getPersonRoles(Principal principal, Locale locale) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(
-                        ApiResponse.<List<RoleResponse>>builder()
-                                .success(true)
-                                .message(messageSource.getMessage("list.of.userRole", null, locale))
-                                .data(authService.getPersonRoles(principal).stream()
-                                        .map(role -> new RoleResponse(role.getName()))
-                                        .toList())
-                                .build()
-                );
-    } //fixme : refactor the response api for this
+                .body(authService.getPersonRoles(principal).stream()
+                        .map(role -> new RoleResponse(role.getName()))
+                        .toList());
+    }
 
-
-//    @GetMapping("/logout")
-//    public  ResponseEntity<Void> logout(Principal principal, Locale locale) {
-
-    /// /        return ResponseEntity.status(HttpStatus.NO_CONTENT);
-//        return
-//    } //fixme : write this code
     @GetMapping("/get-course/{termId}")
     @PreAuthorize("hasRole('STUDENT') AND @securityService.isStudentOfMajor(#termId)")
     public ResponseEntity<List<CourseRegistrationDTO>> studentGetCourse(@PathVariable Long termId) {
@@ -82,8 +65,7 @@ public class PersonController {
                                 .endTime(course.getEndTime())
                                 .dayOfWeek(course.getDayOfWeek())
                                 .build())
-                        .toList()
-        );
+                        .toList());
     }
 
 

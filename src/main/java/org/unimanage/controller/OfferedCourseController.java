@@ -32,47 +32,29 @@ public class OfferedCourseController {
 
     @PostMapping
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<OfferedCourseDTO>> createOfferedCourse(
-            @Valid
-            @RequestBody OfferedCourseDTO offeredCourse) {
+    public ResponseEntity<OfferedCourseDTO> createOfferedCourse(@Valid @RequestBody OfferedCourseDTO offeredCourse) {
         OfferedCourse persist = courseOfferingService.persist(mapper.toEntity(offeredCourse));
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.<OfferedCourseDTO>builder()
-                        .message("created successfully")
-                        .success(true)
-                        .data(mapper.toDTO(persist))
-                        .timestamp(Instant.now().toString())
-                        .build());
+                .body(mapper.toDTO(persist));
     }
 
-    @PutMapping("{offercourseId}")
+    @PutMapping("{offerCourseId}")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<OfferedCourseDTO>> updateOfferedCourse(
-            @PathVariable Long offercourseId,
-            @Valid @RequestBody OfferedCourseDTO offeredCourse) {
+    public ResponseEntity<OfferedCourseDTO> updateOfferedCourse(@PathVariable Long offerCourseId, @Valid @RequestBody OfferedCourseDTO offeredCourse) {
         OfferedCourse entity = mapper.toEntity(offeredCourse);
-        entity.setId(offercourseId);
+        entity.setId(offerCourseId);
         OfferedCourse persist = courseOfferingService.persist(entity);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.<OfferedCourseDTO>builder()
-                        .message("created successfully")
-                        .success(true)
-                        .data(mapper.toDTO(persist))
-                        .timestamp(Instant.now().toString())
-                        .build());
+                .body(mapper.toDTO(persist));
     }
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<ApiResponse<OfferedCourseDTO>> deleteOfferedCourse(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteOfferedCourse(@PathVariable Long id) {
         courseOfferingService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-
-    // student choose course
-    // student get all course term
-    // student can print
 
     @GetMapping("/{termId}")
     @PreAuthorize("hasRole('STUDENT') AND @securityService.isStudentOfMajor(#termId)")

@@ -39,84 +39,49 @@ public class TermController {
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @PostMapping
-    public ResponseEntity<ApiResponse<TermDto>> createTerm(@Valid
-                                                           @RequestBody TermDto termDto) {
-
+    public ResponseEntity<TermDto> createTerm(@Valid @RequestBody TermDto termDto) {
         Term entity = termMapper.toEntity(termDto);
         Term persist = termService.persist(entity);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.<TermDto>builder()
-                        .success(true)
-                        .message(messageSource.getMessage("term.created", null, LocaleContextHolder.getLocale()))
-                        .data(termMapper.toDTO(persist))
-                        .timestamp(Instant.now().toString())
-                        .build());
+                .body(termMapper.toDTO(persist));
     }
+
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<TermDto>> updateTerm(@PathVariable Long id,
-                                                           @Valid
-                                                           @RequestBody TermDto termDto) {
+    public ResponseEntity<TermDto> updateTerm(@PathVariable Long id, @Valid @RequestBody TermDto termDto) {
         Term entity = termMapper.toEntity(termDto);
         entity.setId(id);
         Term persist = termService.persist(entity);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.<TermDto>builder()
-                        .success(true)
-                        .message(messageSource.getMessage("term.updated", null, LocaleContextHolder.getLocale()))
-                        .data(termMapper.toDTO(persist))
-                        .timestamp(Instant.now().toString())
-                        .build());
+                .body(termMapper.toDTO(persist));
     }
 
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<TermDto>> deleteTerm(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTerm(@PathVariable Long id) {
         termService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .body(ApiResponse.<TermDto>builder()
-                        .success(true)
-                        .message(messageSource.getMessage("term.deleted", null, LocaleContextHolder.getLocale()))
-                        .data(null)
-                        .timestamp(Instant.now().toString())
-                        .build());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @GetMapping
-    public ResponseEntity<ApiResponse<List<TermDto>>> getAllTerms() {
+    public ResponseEntity<List<TermDto>> getAllTerms() {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.<List<TermDto>>builder()
-                        .success(true)
-                        .message(messageSource.getMessage("term.listed", null, LocaleContextHolder.getLocale()))
-                        .data(
-                                termService.findAll().stream()
-                                        .map(termMapper::toDTO)
-                                        .collect(Collectors.toList()))
-                        .timestamp(Instant.now().toString())
-                        .build());
+                .body(termService.findAll().stream()
+                        .map(termMapper::toDTO)
+                        .collect(Collectors.toList()));
     }
-
-
 
     @PreAuthorize(STUDENT_OR_MANAGER)
     @GetMapping("/student")
-    public ResponseEntity<ApiResponse<List<TermDto>>> getStudentTerms(Authentication authentication) {
+    public ResponseEntity<List<TermDto>> getStudentTerms(Authentication authentication) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.<List<TermDto>>builder()
-                        .success(true)
-                        .message(messageSource.getMessage("term.listed", null, LocaleContextHolder.getLocale()))
-                        .data(
-                                termService.getAllTerms(authentication.getName()).stream()
-                                        .map(termMapper::toDTO)
-                                        .collect(Collectors.toList())
-                        )
-                        .build());
+                .body(termService.getAllTerms(authentication.getName()).stream()
+                        .map(termMapper::toDTO)
+                        .collect(Collectors.toList()));
     }
-
-
 
 
 }

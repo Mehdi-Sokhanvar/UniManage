@@ -31,35 +31,21 @@ public class ManagerController {
 
     @GetMapping("/course-major/{majorName}")
     @PreAuthorize("hasRole('MANAGER') OR @securityService.isManagerOfMajor(#majorName)")
-    public ResponseEntity<ApiResponse<List<CourseDto>>> getCourseMajor(@PathVariable String majorName) {
+    public ResponseEntity<List<CourseDto>> getCourseMajor(@PathVariable String majorName) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(
-                        ApiResponse.<List<CourseDto>>builder()
-                                .success(true)
-                                .data(courseService.findAllCourseByMajorName(majorName).stream()
-                                        .map(courseMapper::toDTO)
-                                        .toList())
-                                .timestamp(Instant.now().toString())
-                                .build()
-                );
+                .body(courseService.findAllCourseByMajorName(majorName).stream()
+                        .map(courseMapper::toDTO)
+                        .toList());
     }
 
     @GetMapping("/teacher/{majorName}")
     @PreAuthorize("hasRole('MANAGER') OR @securityService.isManagerOfMajor(#majorName)")
-    public ResponseEntity<ApiResponse<List<PersonRegisterDto>>> getTeacherMajor(@PathVariable String majorName) {
+    public ResponseEntity<List<PersonRegisterDto>> getTeacherMajor(@PathVariable String majorName) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(
-                        ApiResponse.<List<PersonRegisterDto>>builder()
-                                .success(true)
-                                .message("Teacher Major")
-                                .data(courseService.findAllTeacherByMajorName(majorName).stream()
-                                        .map(personMapper::toDTO)
-                                        .toList())
-                                .timestamp(Instant.now().toString())
-                                .build()
-                );
+                .body(courseService.findAllTeacherByMajorName(majorName).stream()
+                        .map(personMapper::toDTO)
+                        .toList());
     }
-
 
 
 }

@@ -35,31 +35,24 @@ public class AdminController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/register/teacher")
-    public ResponseEntity<ApiResponse<AccountResponse>> registerTeacher(@RequestBody PersonRegisterDto accountDto, Locale locale) {
+    public ResponseEntity<AccountResponse> registerTeacher(@RequestBody PersonRegisterDto accountDto, Locale locale) {
         return registerPerson(accountDto, "TEACHER", locale);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register/manager")
-    public ResponseEntity<ApiResponse<AccountResponse>> registerManager(@RequestBody PersonRegisterDto accountDto, Locale locale) {
+    public ResponseEntity<AccountResponse> registerManager(@RequestBody PersonRegisterDto accountDto, Locale locale) {
         return registerPerson(accountDto, "MANAGER", locale);
     }
 
-
-    private ResponseEntity<ApiResponse<AccountResponse>> registerPerson(PersonRegisterDto accountDto, String role, Locale locale) {
+    private ResponseEntity<AccountResponse> registerPerson(PersonRegisterDto accountDto, String role, Locale locale) {
         Person entity = personMapper.toEntity(accountDto);
-
         Person persist = authService.persist(entity);
-        authService.addRoleToAccount(role,persist.getAccount().getId());
+        authService.addRoleToAccount(role, persist.getAccount().getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                ApiResponse.<AccountResponse>builder()
-                        .success(true)
-                        .message(messageSource.getMessage("user.register.success", new Object[]{accountDto.getMajorName()}, locale))
-                        .data(AccountResponse.builder()
-                                .username(entity.getNationalCode())
-                                .major(accountDto.getMajorName())
-                                .build())
-                        .timestamp(Instant.now().toString())
+                AccountResponse.builder()
+                        .username(entity.getNationalCode())
+                        .major(accountDto.getMajorName())
                         .build()
         );
     }
@@ -73,23 +66,13 @@ public class AdminController {
                 messageSource.getMessage("success.add.role", new Object[]{request.getRoleName()}, locale)
         );
     }
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @PostMapping("/users/{personId}/roles")
-//    public String addRoleToPerson(@PathVariable Long personId, @RequestBody AddRoleRequest request, Locale locale) {
-//        authService.addRoleToPerson(request.getRoleName(), personId);
-//        return messageSource.getMessage("success.add.role", new Object[]{request.getRoleName()}, locale);
-//
-//    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/active/account/{accountId}")
-    public ResponseEntity<ApiResponse<String>> activeAccount(@PathVariable Long accountId, Locale locale) {
+    public ResponseEntity<String> activeAccount(@PathVariable Long accountId, Locale locale) {
         authService.activeAccount(accountId);
         return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.<String>builder()
-                        .success(true)
-                        .message(messageSource.getMessage("success.active.account", new Object[]{accountId}, locale))
-                        .build()
+                messageSource.getMessage("success.active.account", new Object[]{accountId}, locale)
         );
     }
 

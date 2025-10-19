@@ -35,82 +35,46 @@ public class MajorController {
     private static final String ADMIN_OR_MANAGER = "hasRole('ADMIN') OR hasRole('MANAGER')";
 
 
-
     @PreAuthorize(ADMIN_OR_MANAGER)
     @PostMapping
-    public ResponseEntity<ApiResponse<MajorDto>> create(@RequestBody MajorDto majorDto) {
+    public ResponseEntity<MajorDto> create(@RequestBody MajorDto majorDto) {
         Major persist = majorService.persist(majorMapper.toEntity(majorDto));
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(
-                        ApiResponse.<MajorDto>builder()
-                                .success(true)
-                                .message(messageSource.getMessage("major.creation.success", null, LocaleContextHolder.getLocale()))
-                                .data(majorMapper.toDTO(persist))
-                                .timestamp(Instant.now().toString())
-                                .build()
-                );
+                .body(majorMapper.toDTO(persist));
     }
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @PutMapping("{id}")
-    public ResponseEntity<ApiResponse<MajorDto>> update( @PathVariable Long id,@RequestBody MajorDto majorDto) {
+    public ResponseEntity<MajorDto> update(@PathVariable Long id, @RequestBody MajorDto majorDto) {
         majorDto.setId(id);
         Major persist = majorService.persist(majorMapper.toEntity(majorDto));
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(
-                        ApiResponse.<MajorDto>builder()
-                                .success(true)
-                                .message(messageSource.getMessage("major.update.success", null, LocaleContextHolder.getLocale()))
-                                .data(majorMapper.toDTO(persist))
-                                .timestamp(Instant.now().toString())
-                                .build()
-                );
+                .body(majorMapper.toDTO(persist));
     }
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<MajorDto>> getMajor(@PathVariable Long id) {
+    public ResponseEntity<MajorDto> getMajor(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(
-                        ApiResponse.<MajorDto>builder()
-                                .success(true)
-                                .message(messageSource.getMessage("major.get.success", null, LocaleContextHolder.getLocale()))
-                                .data(majorMapper.toDTO(majorService.findById(id)))
-                                .timestamp(Instant.now().toString())
-                                .build()
-                );
+                .body(majorMapper.toDTO(majorService.findById(id)));
     }
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @GetMapping("/course/{id}")
-    public ResponseEntity<ApiResponse<List<CourseDto>>> getMajorCourse(@PathVariable Long id) {
+    public ResponseEntity<List<CourseDto>> getMajorCourse(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(
-                        ApiResponse.<List<CourseDto>>builder()
-                                .success(true)
-                                .message(messageSource.getMessage("major.get.success", null, LocaleContextHolder.getLocale()))
-                                .data(   majorService.getCoursesByMajor(id).stream()
-                                        .map(courseMapper::toDTO)
-                                        .toList())
-                                .timestamp(Instant.now().toString())
-                                .build()
-                );
+                .body(majorService.getCoursesByMajor(id).stream()
+                        .map(courseMapper::toDTO)
+                        .toList());
     }
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @GetMapping
-    public ResponseEntity<ApiResponse<List<MajorDto>>> findAll() {
+    public ResponseEntity<List<MajorDto>> findAll() {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(
-                        ApiResponse.<List<MajorDto>>builder()
-                                .success(true)
-                                .message(messageSource.getMessage("major.get.success", null, LocaleContextHolder.getLocale()))
-                                .timestamp(Instant.now().toString())
-                                .data(  majorService.findAll().stream()
-                                        .map(majorMapper::toDTO)
-                                        .toList())
-                                .build()
-                );
+                .body(majorService.findAll().stream()
+                                .map(majorMapper::toDTO)
+                                .toList());
     }
 
     @PreAuthorize(ADMIN_OR_MANAGER)
