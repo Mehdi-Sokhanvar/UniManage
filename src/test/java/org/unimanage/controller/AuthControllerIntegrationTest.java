@@ -1,6 +1,8 @@
 package org.unimanage.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,14 @@ import org.unimanage.domain.user.Account;
 import org.unimanage.domain.user.Person;
 import org.unimanage.repository.AccountRepository;
 import org.unimanage.repository.PersonRepository;
+import org.unimanage.repository.RoleRepository;
 import org.unimanage.util.dto.AccountRequestDto;
 import org.unimanage.util.dto.AuthResponseDto;
 import org.unimanage.util.dto.PersonRegisterDto;
 import org.unimanage.util.enumration.AccountStatus;
+
+import java.util.HashSet;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -32,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 )
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
+@Transactional
 public class AuthControllerIntegrationTest {
 
     @Autowired
@@ -44,6 +51,8 @@ public class AuthControllerIntegrationTest {
     private AccountRepository accountRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private RoleRepository roleRepository;
 
     private final TestDataFactory testDataFactory = new TestDataFactory();
 
@@ -212,12 +221,11 @@ public class AuthControllerIntegrationTest {
                 .username(nationalCode)
                 .password(passwordEncoder.encode(phoneNumber))
                 .status(status)
+                .roles(new HashSet<>(List.of(roleRepository.findByName("STUDENT").get())))
                 .authId(null)
                 .build());
 
-        Person save = personRepository.save(person);
-        save.setAccount(account);
-        personRepository.save(person);
-        return save;
+        person.setAccount(account);
+        return personRepository.save(person);
     }
 }
