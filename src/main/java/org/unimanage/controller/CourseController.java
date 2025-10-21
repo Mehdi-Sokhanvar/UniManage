@@ -2,6 +2,7 @@ package org.unimanage.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -38,7 +39,7 @@ public class CourseController {
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @PostMapping
-    public ResponseEntity<ApiResponse<CourseDto>> createCourse(@RequestBody CourseDto request) {
+    public ResponseEntity<ApiResponse<CourseDto>> createCourse(@Valid @RequestBody CourseDto request) {
 
         Course createdCourse = courseService.persist(courseMapper.toEntity(request));
         return ResponseEntity.status(HttpStatus.CREATED).body(
@@ -54,7 +55,7 @@ public class CourseController {
     @PutMapping("/{id}")
     @PreAuthorize(ADMIN_OR_MANAGER)
     public ResponseEntity<ApiResponse<CourseDto>> updateCourse(@PathVariable Long id,
-                                                               @RequestBody CourseDto request) {
+                                                               @Valid @RequestBody CourseDto request) {
 
         request.setId(id);
         Course persist = courseService.persist(courseMapper.toEntity(request));

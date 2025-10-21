@@ -26,6 +26,7 @@ import org.unimanage.repository.PersonRepository;
 import org.unimanage.repository.RoleRepository;
 import org.unimanage.service.AuthService;
 import org.unimanage.util.enumration.AccountStatus;
+import org.unimanage.util.exception.DuplicateEntityException;
 import org.unimanage.util.exception.EntityNotFoundException;
 import org.unimanage.util.message.ErrorMessage;
 import org.unimanage.util.dto.AccountRequestDto;
@@ -156,11 +157,11 @@ public class AuthServiceImpl extends BaseServiceImpl<Person, Long> implements Au
         boolean hasRole = account.getRoles().stream()
                 .anyMatch(r -> r.getName().equals(role));
         if (hasRole) {
-            messageSource.getMessage(
+            throw new DuplicateEntityException(messageSource.getMessage(
                     "error.person.already.has.role",
                     new Object[]{account.getUsername(), role},
                     locale
-            );
+            ));
         }
         Role roleExist = roleRepository.findByName(role)
                 .orElseThrow(() -> new org.unimanage.util.exception.EntityNotFoundException(messageSource.getMessage("error.role.not.found", new Object[]{role}, locale)));

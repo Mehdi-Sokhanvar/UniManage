@@ -28,14 +28,15 @@ public interface OfferedCourseRepository extends JpaRepository<OfferedCourse, Lo
                            o.startTime <= :startTime  AND
                            o.endTime >= :endTime)
             """)
-    boolean isTeacherOverlappingSchedule(@Param("teacherId") Long teacherId,
-                                 @Param("termId") Long termId,
-                                 @Param("daysOfWeek") DayOfWeek day,
-                                 @Param("startTime") LocalTime startTime,
-                                 @Param("endTime") LocalTime endTime);
+    boolean isTeacherOverlappingSchedule(
+            @Param("teacherId") Long teacherId,
+            @Param("termId") Long termId,
+            @Param("daysOfWeek") DayOfWeek day,
+            @Param("startTime") LocalTime startTime,
+            @Param("endTime") LocalTime endTime
+    );
 
     List<OfferedCourse> findByTermId(Long termId);
-
 
 
     List<OfferedCourse> findAllByTeacher_IdAndTerm_Id(Long teacherId, Long termId);

@@ -1,7 +1,6 @@
 package org.unimanage.service.imple;
 
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
@@ -12,6 +11,7 @@ import org.unimanage.repository.CourseRepository;
 import org.unimanage.repository.MajorRepository;
 import org.unimanage.repository.PersonRepository;
 import org.unimanage.service.CourseService;
+import org.unimanage.util.exception.EntityNotFoundException;
 import org.unimanage.util.message.ErrorMessage;
 import org.unimanage.util.exception.AccessDeniedException;
 import org.unimanage.util.exception.DuplicateEntityException;

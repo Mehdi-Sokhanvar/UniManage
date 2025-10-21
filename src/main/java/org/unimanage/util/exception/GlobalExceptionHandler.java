@@ -71,6 +71,9 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(request, HttpStatus.FORBIDDEN, e.getMessage());
     }
 
+
+
+
     @ExceptionHandler(EntityExistsException.class)
     public ResponseEntity<ErrorResponse> handleEntityExistsException(HttpServletRequest request, EntityExistsException e) {
         return buildErrorResponse(request, HttpStatus.CONFLICT, e.getMessage());

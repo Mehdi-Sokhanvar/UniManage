@@ -36,13 +36,13 @@ public class AdminController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/register/teacher")
-    public ResponseEntity<AccountResponse> registerTeacher(@RequestBody PersonRegisterDto accountDto, Locale locale) {
+    public ResponseEntity<AccountResponse> registerTeacher(@Valid @RequestBody PersonRegisterDto accountDto, Locale locale) {
         return registerPerson(accountDto, "TEACHER", locale);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register/manager")
-    public ResponseEntity<AccountResponse> registerManager(@RequestBody PersonRegisterDto accountDto, Locale locale) {
+    public ResponseEntity<AccountResponse> registerManager(@Valid @RequestBody PersonRegisterDto accountDto, Locale locale) {
         return registerPerson(accountDto, "MANAGER", locale);
     }
 
@@ -60,10 +60,10 @@ public class AdminController {
 
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/users/{personId}/roles")
-    public ResponseEntity<String> addRoleToPerson(@PathVariable Long personId, @Valid @RequestBody AddRoleRequest request, Locale locale) {
-        authService.addRoleToAccount(request.getRoleName(), personId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(
+    @PostMapping("/users/{accountId}/roles")
+    public ResponseEntity<String> addRoleToPerson(@PathVariable Long accountId, @Valid @RequestBody AddRoleRequest request, Locale locale) {
+        authService.addRoleToAccount(request.getRoleName(), accountId);
+        return ResponseEntity.status(HttpStatus.OK).body(
                 messageSource.getMessage("success.add.role", new Object[]{request.getRoleName()}, locale)
         );
     }

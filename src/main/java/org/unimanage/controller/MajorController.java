@@ -3,6 +3,7 @@ package org.unimanage.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -32,34 +33,34 @@ public class MajorController {
     private final CourseMapper courseMapper;
     private final MessageSource messageSource;
 
-    private static final String ADMIN_OR_MANAGER = "hasRole('ADMIN') OR hasRole('MANAGER')";
+    private static final String ADMIN = "hasRole('ADMIN')";
 
 
-    @PreAuthorize(ADMIN_OR_MANAGER)
+    @PreAuthorize(ADMIN)
     @PostMapping
-    public ResponseEntity<MajorDto> create(@RequestBody MajorDto majorDto) {
+    public ResponseEntity<MajorDto> create(@Valid @RequestBody MajorDto majorDto) {
         Major persist = majorService.persist(majorMapper.toEntity(majorDto));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(majorMapper.toDTO(persist));
     }
 
-    @PreAuthorize(ADMIN_OR_MANAGER)
+    @PreAuthorize(ADMIN)
     @PutMapping("{id}")
-    public ResponseEntity<MajorDto> update(@PathVariable Long id, @RequestBody MajorDto majorDto) {
+    public ResponseEntity<MajorDto> update(@PathVariable Long id, @Valid  @RequestBody MajorDto majorDto) {
         majorDto.setId(id);
         Major persist = majorService.persist(majorMapper.toEntity(majorDto));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(majorMapper.toDTO(persist));
     }
 
-    @PreAuthorize(ADMIN_OR_MANAGER)
+    @PreAuthorize(ADMIN)
     @GetMapping("/{id}")
     public ResponseEntity<MajorDto> getMajor(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(majorMapper.toDTO(majorService.findById(id)));
     }
 
-    @PreAuthorize(ADMIN_OR_MANAGER)
+    @PreAuthorize(ADMIN)
     @GetMapping("/course/{id}")
     public ResponseEntity<List<CourseDto>> getMajorCourse(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -68,7 +69,7 @@ public class MajorController {
                         .toList());
     }
 
-    @PreAuthorize(ADMIN_OR_MANAGER)
+
     @GetMapping
     public ResponseEntity<List<MajorDto>> findAll() {
         return ResponseEntity.status(HttpStatus.OK)
@@ -77,7 +78,7 @@ public class MajorController {
                                 .toList());
     }
 
-    @PreAuthorize(ADMIN_OR_MANAGER)
+    @PreAuthorize(ADMIN)
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
         majorService.deleteById(id);
