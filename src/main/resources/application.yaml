@@ -35,3 +35,5 @@ app:
       access-token-expiration: 86400000
       refresh-token-expiration: 604800000
 
+allow:
+  origins: ${ALLOW_ORIGIN:localhost:5432}
