@@ -110,7 +110,6 @@ public class MajorControllerIntegrationTest {
 
     @Test
     void Should_Admin_Update_Major_Successfully() throws Exception {
-        // First, create a major
         MajorDto majorDto = MajorDto.builder().name("Mathematics").numberOfUnits((byte) 21).build();
         String createResponse = mockMvc.perform(post("/api/majors")
                         .header("Authorization", "Bearer " + ADMIN_TOKEN)
@@ -118,8 +117,6 @@ public class MajorControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(majorDto)))
                 .andReturn().getResponse().getContentAsString();
         MajorDto createdMajor = objectMapper.readValue(createResponse, MajorDto.class);
-
-        // Update it
         createdMajor.setName("Applied Mathematics");
         mockMvc.perform(put("/api/majors/" + createdMajor.getId())
                         .header("Authorization", "Bearer " + ADMIN_TOKEN)
