@@ -7,6 +7,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.unimanage.domain.course.Major;
 import org.unimanage.domain.course.Term;
+import org.unimanage.domain.exam.ExamTemplate;
 import org.unimanage.domain.user.Account;
 import org.unimanage.domain.user.Person;
 import org.unimanage.repository.AccountRepository;

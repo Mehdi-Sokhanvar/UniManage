@@ -33,71 +33,51 @@ public class CourseController {
     private final CourseMapper courseMapper;
     private final MessageSource messageSource;
 
-    private static final String ADMIN_OR_MANAGER= "hasRole('ADMIN') OR hasRole('MANAGER')";
+    private static final String ADMIN_OR_MANAGER = "hasRole('ADMIN') OR hasRole('MANAGER')";
     private static final String ALL_AUTHENTICATED = "hasRole('ADMIN') OR hasRole('MANAGER') OR hasRole('STUDENT')";
 
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @PostMapping
-    public ResponseEntity<ApiResponse<CourseDto>> createCourse(@Valid @RequestBody CourseDto request) {
+    public ResponseEntity<CourseDto> createCourse(@Valid @RequestBody CourseDto request) {
 
         Course createdCourse = courseService.persist(courseMapper.toEntity(request));
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                ApiResponse.<CourseDto>builder()
-                        .success(true)
-                        .message(messageSource.getMessage("course.creation.success", null, LocaleContextHolder.getLocale()))
-                        .data(courseMapper.toDTO(createdCourse))
-                        .timestamp(Instant.now().toString())
-                        .build()
+                courseMapper.toDTO(createdCourse)
         );
     }
 
     @PutMapping("/{id}")
     @PreAuthorize(ADMIN_OR_MANAGER)
-    public ResponseEntity<ApiResponse<CourseDto>> updateCourse(@PathVariable Long id,
-                                                               @Valid @RequestBody CourseDto request) {
+    public ResponseEntity<CourseDto> updateCourse(@PathVariable Long id,
+                                                  @Valid @RequestBody CourseDto request) {
 
         request.setId(id);
         Course persist = courseService.persist(courseMapper.toEntity(request));
 
         return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.<CourseDto>builder()
-                        .success(true)
-                        .message(messageSource.getMessage("course.update.success", null, LocaleContextHolder.getLocale()))
-                        .data(courseMapper.toDTO(persist))
-                        .timestamp(Instant.now().toString())
-                        .build()
+                courseMapper.toDTO(persist)
         );
 
     }
 
     @PreAuthorize(ADMIN_OR_MANAGER)
     @GetMapping
-    public ResponseEntity<ApiResponse<List<CourseDto>>> getAllCourses() {
+    public ResponseEntity<List<CourseDto>> getAllCourses() {
         return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.<List<CourseDto>>builder()
-                        .success(true)
-                        .message(messageSource.getMessage("courses.get.success", null, LocaleContextHolder.getLocale()))
-                        .data(courseService.findAll().stream()
-                                .map(courseMapper::toDTO)
-                                .toList())
-                        .timestamp(Instant.now().toString())
-                        .build()
+                courseService.findAll().stream()
+                        .map(courseMapper::toDTO)
+                        .toList()
         );
     }
 
     @PreAuthorize(ALL_AUTHENTICATED)
-    @GetMapping("major/{majorId}")
-    public ResponseEntity<ApiResponse<List<CourseDto>>> getCourseByMajor(@PathVariable Long majorId) {
+    @GetMapping("/major/{majorId}")
+    public ResponseEntity<List<CourseDto>> getCourseByMajor(@PathVariable Long majorId) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.<List<CourseDto>>builder()
-                        .success(true)
-                        .message(messageSource.getMessage("courses.get.success", null, LocaleContextHolder.getLocale()))
-                        .data(courseService.findAllMajorCourse(majorId).stream()
-                                .map(courseMapper::toDTO)
-                                .toList())
-                        .timestamp(Instant.now().toString())
-                        .build()
+                courseService.findAllMajorCourse(majorId).stream()
+                        .map(courseMapper::toDTO)
+                        .toList()
         );
     }
 
