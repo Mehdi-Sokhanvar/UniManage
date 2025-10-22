@@ -22,8 +22,9 @@ import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @RestController
-@RequestMapping("/api/terms/")
+@RequestMapping("/api/term")
 @RequiredArgsConstructor
 public class TermController {
 
@@ -32,40 +33,43 @@ public class TermController {
     private final MessageSource messageSource;
 
 
-    private static final String ADMIN_OR_MANAGER = "hasRole('ADMIN') OR hasRole('MANAGER')";
-    private static final String ALL_AUTHENTICATED = "hasRole('ADMIN') OR hasRole('MANAGER') OR hasRole('STUDENT')";
+    private static final String ADMIN_OR_DEPARTMENT_MANAGER = "hasRole('ADMIN') OR hasRole('MANAGER')";
     private static final String STUDENT_OR_MANAGER = "hasRole('STUDENT') OR hasRole('MANAGER')";
+    private static final String DEPARTMENT_MANAGER = "hasRole('MANAGER') ";
 
 
-    @PreAuthorize(ADMIN_OR_MANAGER)
+    @PreAuthorize(DEPARTMENT_MANAGER)
     @PostMapping
     public ResponseEntity<TermDto> createTerm(@Valid @RequestBody TermDto termDto) {
-        Term entity = termMapper.toEntity(termDto);
-        Term persist = termService.persist(entity);
+        Term persist =
+                termService.persist(
+                        termMapper.toEntity(termDto)
+                );
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(termMapper.toDTO(persist));
     }
 
 
-    @PreAuthorize(ADMIN_OR_MANAGER)
-    @PutMapping("/{id}")
-    public ResponseEntity<TermDto> updateTerm(@PathVariable Long id, @Valid @RequestBody TermDto termDto) {
-        Term entity = termMapper.toEntity(termDto);
-        entity.setId(id);
-        Term persist = termService.persist(entity);
+    @PreAuthorize(DEPARTMENT_MANAGER)
+    @PutMapping
+    public ResponseEntity<TermDto> updateTerm(@Valid @RequestBody TermDto termDto) {
+        Term persist =
+                termService.persist(
+                        termMapper.toEntity(termDto)
+                );
         return ResponseEntity.status(HttpStatus.OK)
                 .body(termMapper.toDTO(persist));
     }
 
 
-    @PreAuthorize(ADMIN_OR_MANAGER)
+    @PreAuthorize(DEPARTMENT_MANAGER)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTerm(@PathVariable Long id) {
         termService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PreAuthorize(ADMIN_OR_MANAGER)
+    @PreAuthorize(ADMIN_OR_DEPARTMENT_MANAGER)
     @GetMapping
     public ResponseEntity<List<TermDto>> getAllTerms() {
         return ResponseEntity.status(HttpStatus.OK)

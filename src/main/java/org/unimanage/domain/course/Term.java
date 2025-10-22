@@ -23,9 +23,13 @@ import java.util.List;
 
 public class Term extends BaseModel<Long> {
 
+    private final String TERM_YEAR="term-year";
+
     @Enumerated(EnumType.STRING)
     private Semester semester;
 
+
+    @Column(name = TERM_YEAR)
     private int year;
 
     @ManyToOne
