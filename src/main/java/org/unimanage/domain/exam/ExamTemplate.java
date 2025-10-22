@@ -8,6 +8,7 @@ import org.unimanage.domain.course.OfferedCourse;
 import org.unimanage.util.enumration.ExamStatus;
 
 import java.time.Instant;
+import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -16,18 +17,21 @@ import java.util.List;
 @NoArgsConstructor
 
 
-
 @Entity
 @Table(name = "exam_template")
 
 public class ExamTemplate extends BaseModel<Long> {
 
-    private Instant startTime;
+    private String title;
 
-    private Instant endTime;
+    private String description;
+
+    private LocalTime startTime;
+
+    private LocalTime endTime;
 
     private Double score;
-    //
+
     private Double averageScore;
 
     private Double passingScore;
@@ -35,7 +39,7 @@ public class ExamTemplate extends BaseModel<Long> {
     @Enumerated(EnumType.STRING)
     private ExamStatus status;
 
-    @OneToMany(mappedBy = "exam" )
+    @OneToMany(mappedBy = "exam")
     private List<ExamQuestion> examQuestions;
 
     @ManyToOne(fetch = FetchType.LAZY)

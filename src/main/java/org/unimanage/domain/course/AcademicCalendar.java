@@ -19,7 +19,7 @@ import java.time.LocalDate;
 
 
 @Entity
-@Table(name = "accademic-calendar")
+@Table(name = "accademic_calendar")
 
 public class AcademicCalendar extends BaseModel<Long> {
 
@@ -34,5 +34,7 @@ public class AcademicCalendar extends BaseModel<Long> {
 
     private LocalDate classesStart;
     private LocalDate classesEnd;
+
+    private LocalDate finalExam;
 
 }
