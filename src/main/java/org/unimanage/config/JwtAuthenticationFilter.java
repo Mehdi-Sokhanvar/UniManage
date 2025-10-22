@@ -41,15 +41,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (token != null) {
                 authenticateToken(token);
             }
+            filterChain.doFilter(request, response);
         } catch (EntityNotFoundException e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Account not found for token");
         } catch (Exception e) {
             SecurityContextHolder.clearContext();
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
         }
-
-        filterChain.doFilter(request, response);
-
     }
 
     private String extractToken(HttpServletRequest request) {
