@@ -42,33 +42,23 @@ public class DataInitializer implements CommandLineRunner {
         Role instructorRole = roleRepository.save(Role.builder().name("TEACHER").build());
         Role managerRole = roleRepository.save(Role.builder().name("MANAGER").build());
         Role userRole = roleRepository.save(Role.builder().name("USER").build());
-        personRepository.save(
-                Person.builder()
+        accountRepository.save(Account.builder()
+                .username("manager")
+                .password(passwordEncoder.encode("1234567890"))
+                .authId(UUID.fromString("a2fa45dd-8ffb-4e20-8b32-313a5bb046bc"))
+                .status(AccountStatus.ACTIVE)
+                .person(Person.builder()
                         .nationalCode("123456789")
                         .email("admin@gmail.com")
-                        .account(Account.builder()
-                                .username("admin")
-                                .password(passwordEncoder.encode("1234567890"))
-                                .authId(UUID.fromString("a2fa45dd-8ffb-4e20-8b32-313a5bb046bc"))
-                                .roles(Set.of(adminRole))
-                                .status(AccountStatus.ACTIVE)
-                                .build())
-                        .build()
-        );
-        personRepository.save(
-                Person.builder()
-                        .nationalCode("123456789")
-                        .email("admin@gmail.com")
-                        .account(Account.builder()
-                                .username("manager")
-                                .password(passwordEncoder.encode("1234567890"))
-                                .authId(UUID.fromString("a2fa45dd-8ffb-4e20-8b32-313a5bb046bc"))
-                                .roles(Set.of(studentRole))
-                                .status(AccountStatus.ACTIVE)
-                                .build())
-                        .build()
-        );
-
+                        .roles(Set.of(adminRole))
+                        .build())
+                .build());
+        accountRepository.save(Account.builder()
+                .username("admin")
+                .password(passwordEncoder.encode("1234567890"))
+                .authId(UUID.fromString("a2fa45dd-8ffb-4e20-8b32-313a5bb046bc"))
+                .status(AccountStatus.ACTIVE)
+                .build());
         majorRepository.save(Major.builder()
                 .name("علوم کامپیوتر")
                 .numberOfUnits(70)

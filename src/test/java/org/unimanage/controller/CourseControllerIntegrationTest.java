@@ -18,6 +18,7 @@ import org.unimanage.controller.util.TestDataFactory;
 import org.unimanage.domain.course.Course;
 import org.unimanage.domain.course.Major;
 import org.unimanage.domain.user.Account;
+import org.unimanage.domain.user.Person;
 import org.unimanage.repository.*;
 import org.unimanage.util.dto.AccountRequestDto;
 import org.unimanage.util.dto.AuthResponseDto;
@@ -81,16 +82,16 @@ public class CourseControllerIntegrationTest {
         adminAccount = Account.builder()
                 .username("admin_username")
                 .password(passwordEncoder.encode("password"))
-                .roles(new HashSet<>(List.of(roleRepository.findByName("ADMIN").get())))
+                .person(Person.builder().roles(new HashSet<>(List.of(roleRepository.findByName("ADMIN").get()))).build())
                 .status(AccountStatus.ACTIVE)
                 .build();
-
         manageAccount = Account.builder()
                 .username("manage_username")
                 .password(passwordEncoder.encode("password"))
-                .roles(new HashSet<>(List.of(roleRepository.findByName("MANAGER").get())))
+                .person(Person.builder().roles(new HashSet<>(List.of(roleRepository.findByName("MANAGER").get()))).build())
                 .status(AccountStatus.ACTIVE)
                 .build();
+
 
 
         accountRepository.save(adminAccount);

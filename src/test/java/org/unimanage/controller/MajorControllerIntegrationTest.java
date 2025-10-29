@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.unimanage.UniManageApplication;
 import org.unimanage.controller.util.TestDataFactory;
 import org.unimanage.domain.user.Account;
+import org.unimanage.domain.user.Person;
 import org.unimanage.repository.AccountRepository;
 import org.unimanage.repository.PersonRepository;
 import org.unimanage.repository.RoleRepository;
@@ -70,7 +71,7 @@ public class MajorControllerIntegrationTest {
         adminAccount = Account.builder()
                 .username("admin_username")
                 .password(passwordEncoder.encode("password"))
-                .roles(new HashSet<>(List.of(roleRepository.findByName("ADMIN").get())))
+                .person(Person.builder().roles(new HashSet<>(List.of(roleRepository.findByName("ADMIN").get()))).build())
                 .status(AccountStatus.ACTIVE)
                 .build();
         accountRepository.save(adminAccount);

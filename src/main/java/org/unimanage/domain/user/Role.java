@@ -6,7 +6,9 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.unimanage.domain.BaseModel;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Getter
@@ -22,10 +24,7 @@ public class Role extends BaseModel<Long> {
 
     private String name;
 
-//    @ManyToMany(mappedBy = "roles")
-//    private List<Person> persons;
-
-   @ManyToMany(mappedBy = "roles")
-    private List<Account> accounts;
+    @ManyToMany(mappedBy = "roles")
+    private Set<Person> persons=new HashSet<>();
 
 }

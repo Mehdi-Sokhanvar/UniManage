@@ -49,7 +49,7 @@ public class AdminController {
     private ResponseEntity<AccountResponse> registerPerson(PersonRegisterDto accountDto, String role, Locale locale) {
         Person entity = personMapper.toEntity(accountDto);
         Person persist = authService.persist(entity);
-        authService.addRoleToAccount(role, persist.getAccount().getId());
+        authService.addRoleToPerson(role, persist.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 AccountResponse.builder()
                         .username(entity.getNationalCode())
@@ -62,7 +62,7 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/users/{accountId}/roles")
     public ResponseEntity<String> addRoleToPerson(@PathVariable Long accountId, @Valid @RequestBody AddRoleRequest request, Locale locale) {
-        authService.addRoleToAccount(request.getRoleName(), accountId);
+        authService.addRoleToPerson(request.getRoleName(), accountId);
         return ResponseEntity.status(HttpStatus.OK).body(
                 messageSource.getMessage("success.add.role", new Object[]{request.getRoleName()}, locale)
         );

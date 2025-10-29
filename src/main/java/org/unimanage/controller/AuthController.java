@@ -37,7 +37,7 @@ public class AuthController {
     public ResponseEntity<AccountResponse> registerStudent(@Valid @RequestBody PersonRegisterDto accountDto) {
         Person entity = personMapper.toEntity(accountDto);
         Person persist = authService.persist(entity);
-        authService.addRoleToAccount("STUDENT", persist.getAccount().getId());
+        authService.addRoleToPerson("STUDENT", persist.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 AccountResponse.builder()
                         .username(entity.getNationalCode())

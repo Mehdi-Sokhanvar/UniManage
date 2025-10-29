@@ -19,6 +19,7 @@ import org.unimanage.UniManageApplication;
 import org.unimanage.controller.util.TestDataFactory;
 import org.unimanage.domain.user.Account;
 import org.unimanage.domain.user.Person;
+import org.unimanage.domain.user.Role;
 import org.unimanage.repository.AccountRepository;
 import org.unimanage.repository.PersonRepository;
 import org.unimanage.repository.RoleRepository;
@@ -120,22 +121,27 @@ public class PersonControllerIntegrationTest {
     }
 
     void setupRolesAndAccounts() throws Exception {
+
+
         studentAccount = Account.builder()
                 .username("student_username")
                 .password(passwordEncoder.encode("password"))
-                .roles(new HashSet<>(List.of(roleRepository.findByName("STUDENT").get())))
+                .person(Person.builder().roles(new HashSet<>(List.of(roleRepository.findByName("STUDENT").get()))).build())
+
                 .status(AccountStatus.ACTIVE)
                 .build();
         adminAccount = Account.builder()
                 .username("admin_username")
                 .password(passwordEncoder.encode("password"))
-                .roles(new HashSet<>(List.of(roleRepository.findByName("ADMIN").get())))
+                .person(Person.builder().roles(new HashSet<>(List.of(roleRepository.findByName("ADMIN").get()))).build())
+
                 .status(AccountStatus.ACTIVE)
                 .build();
         teacherAccount = Account.builder()
                 .username("teacher_username")
                 .password(passwordEncoder.encode("password"))
-                .roles(new HashSet<>(List.of(roleRepository.findByName("TEACHER").get())))
+                .person(Person.builder().roles(new HashSet<>(List.of(roleRepository.findByName("TEACHER").get()))).build())
+
                 .status(AccountStatus.ACTIVE)
                 .build();
 

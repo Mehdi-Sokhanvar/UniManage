@@ -10,7 +10,7 @@ import java.util.Set;
 
 public interface AuthService  extends BaseService<Person,Long>{
     AuthResponseDto login(AccountRequestDto request);
-    void addRoleToAccount(String role , Long accountId);
+    void addRoleToPerson(String role , Long personId);
     Set<Role> getPersonRoles(Principal principal);
     void rePassword(String oldPassword, String newPassword, Principal principal);
     void forgotPassword(String emailOrPhone);

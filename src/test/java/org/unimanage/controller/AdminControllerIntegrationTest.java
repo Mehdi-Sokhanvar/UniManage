@@ -18,6 +18,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.unimanage.UniManageApplication;
 import org.unimanage.controller.util.TestDataFactory;
 import org.unimanage.domain.user.Account;
+import org.unimanage.domain.user.Person;
 import org.unimanage.repository.AccountRepository;
 import org.unimanage.repository.PersonRepository;
 import org.unimanage.repository.RoleRepository;
@@ -80,13 +81,13 @@ public class AdminControllerIntegrationTest {
         adminAccount = Account.builder()
                 .username("admin_username")
                 .password(passwordEncoder.encode("password"))
-                .roles(new HashSet<>(List.of(roleRepository.findByName("ADMIN").get())))
+                .person(Person.builder().roles(new HashSet<>(List.of(roleRepository.findByName("ADMIN").get()))).build())
                 .status(AccountStatus.ACTIVE)
                 .build();
         manageAccount = Account.builder()
                 .username("manage_username")
                 .password(passwordEncoder.encode("password"))
-                .roles(new HashSet<>(List.of(roleRepository.findByName("MANAGER").get())))
+                .person(Person.builder().roles(new HashSet<>(List.of(roleRepository.findByName("MANAGER").get()))).build())
                 .status(AccountStatus.ACTIVE)
                 .build();
 
@@ -168,7 +169,7 @@ public class AdminControllerIntegrationTest {
         Account sampleAccount = accountRepository.save(Account.builder()
                 .username("manage_username")
                 .password(passwordEncoder.encode("password"))
-                .roles(new HashSet<>(List.of(roleRepository.findByName("MANAGER").get())))
+                .person(Person.builder().roles(new HashSet<>(List.of(roleRepository.findByName("MANAGER").get()))).build())
                 .status(AccountStatus.INACTIVE)
                 .build());
         mockMvc.perform(

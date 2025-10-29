@@ -10,6 +10,7 @@ import org.unimanage.domain.course.StudentCourseRegistration;
 import org.unimanage.domain.exam.ExamInstance;
 import org.unimanage.util.enumration.Degree;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -33,16 +34,16 @@ public class Person extends BaseModel<Long> {
 
     private String phoneNumber;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "person")
     private Account account;
 
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(
-//            name = "person_role",
-//            joinColumns = @JoinColumn(name = "person_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id")
-//    )
-//    private Set<Role> roles;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "person_role",
+            joinColumns = @JoinColumn(name = "person_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
     private List<ExamInstance> examInstanceList;

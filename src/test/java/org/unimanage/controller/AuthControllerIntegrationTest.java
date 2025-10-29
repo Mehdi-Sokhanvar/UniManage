@@ -221,7 +221,7 @@ public class AuthControllerIntegrationTest {
                 .username(nationalCode)
                 .password(passwordEncoder.encode(phoneNumber))
                 .status(status)
-                .roles(new HashSet<>(List.of(roleRepository.findByName("STUDENT").get())))
+                .person(Person.builder().roles(new HashSet<>(List.of(roleRepository.findByName("STUDENT").get()))).build())
                 .authId(null)
                 .build());
 

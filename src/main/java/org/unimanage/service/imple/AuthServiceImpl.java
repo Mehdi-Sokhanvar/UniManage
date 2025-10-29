@@ -36,10 +36,7 @@ import org.unimanage.util.exception.EntityExistsException;
 import org.unimanage.util.jwt.JwtUtil;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AuthServiceImpl extends BaseServiceImpl<Person, Long> implements AuthService {
@@ -117,12 +114,24 @@ public class AuthServiceImpl extends BaseServiceImpl<Person, Long> implements Au
 
     @Override
     protected void postPersist(Person entity) {
+
+//        accountRepository.save(Account.builder()
+//                .username(entity.getNationalCode())
+//                .password(passwordEncoder.encode(entity.getPhoneNumber()))
+//                .status(AccountStatus.INACTIVE)
+//                .person(entity)
+//                .build());
+
         entity.setAccount(Account.builder()
                 .username(entity.getNationalCode())
                 .password(passwordEncoder.encode(entity.getPhoneNumber()))
                 .status(AccountStatus.INACTIVE)
+                .person(entity)
                 .build());
+
+        accountRepository.save(entity.getAccount());
         personRepository.save(entity);
+
     }
 
 
@@ -149,24 +158,25 @@ public class AuthServiceImpl extends BaseServiceImpl<Person, Long> implements Au
     }
 
     @Override
-    public void addRoleToAccount(String role, Long accountId) {
+    public void addRoleToPerson(String role, Long personId) {
         Locale locale = LocaleContextHolder.getLocale();
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("account.not.found", new Object[]{accountId}, LocaleContextHolder.getLocale())));
 
-        boolean hasRole = account.getRoles().stream()
+        Person person = personRepository.findById(personId)
+                .orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("account.not.found", new Object[]{personId}, LocaleContextHolder.getLocale())));
+
+        boolean hasRole = person.getRoles().stream()
                 .anyMatch(r -> r.getName().equals(role));
         if (hasRole) {
             throw new DuplicateEntityException(messageSource.getMessage(
                     "error.person.already.has.role",
-                    new Object[]{account.getUsername(), role},
+                    new Object[]{person.getNationalCode(), role},
                     locale
             ));
         }
         Role roleExist = roleRepository.findByName(role)
                 .orElseThrow(() -> new org.unimanage.util.exception.EntityNotFoundException(messageSource.getMessage("error.role.not.found", new Object[]{role}, locale)));
-        account.getRoles().add(roleExist);
-        accountRepository.save(account);
+        person.getRoles().add(roleExist);
+        personRepository.save(person);
     }
 
     @Override
@@ -174,7 +184,7 @@ public class AuthServiceImpl extends BaseServiceImpl<Person, Long> implements Au
         String username = principal.getName();
         Account account = accountRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.USERNAME_NOT_FOUND.format(username)));
-        return account.getRoles();
+        return account.getPerson().getRoles();
     }
 
     @Override

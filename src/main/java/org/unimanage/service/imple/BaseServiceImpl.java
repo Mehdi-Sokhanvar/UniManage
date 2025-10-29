@@ -5,6 +5,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.unimanage.domain.BaseModel;
 import org.unimanage.service.BaseService;
 
@@ -30,6 +31,7 @@ public abstract class BaseServiceImpl<T extends BaseModel<ID>, ID extends Serial
     }
 
 
+    @Transactional
     @Override
     public T persist(T entity) {
         boolean isNew = entity.getId() == null;
@@ -37,7 +39,9 @@ public abstract class BaseServiceImpl<T extends BaseModel<ID>, ID extends Serial
         if (isNew) {
             prePersist(entity);
         } else {
-            repository.findById(entity.getId()).orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("ENTITY_NOT_FOUND", new Object[]{entity.getId()}, LocaleContextHolder.getLocale())));
+            repository.findById(entity.getId())
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            messageSource.getMessage("ENTITY_NOT_FOUND", new Object[]{entity.getId()}, LocaleContextHolder.getLocale())));
             preUpdate(entity);
         }
 
@@ -61,6 +65,7 @@ public abstract class BaseServiceImpl<T extends BaseModel<ID>, ID extends Serial
         return repository.findAll();
     }
 
+    @Transactional
     @Override
     public void deleteById(ID id) {
 //   todo : توی برنامه ما وقتی داریم از جنریک برای ورود یه نوع مشخث میگیریم طوری بهتر این رو هندل کنیم
@@ -69,8 +74,8 @@ public abstract class BaseServiceImpl<T extends BaseModel<ID>, ID extends Serial
                         String.format(ENTITY_NOT_FOUND, id)
                 ));
         preDelete(id);
-        repository.deleteById(id);
-//        postDelete(entity);
+        repository.delete(entity);
+        postDelete(entity);
     }
 
     @Override
